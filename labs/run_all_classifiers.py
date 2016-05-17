@@ -1,11 +1,17 @@
-import lxmls.readers.simple_data_set as sds
-import lxmls.classifiers.linear_classifier as lcc
-import lxmls.classifiers.naive_bayes as nbc
-import lxmls.classifiers.perceptron as percc
-import lxmls.classifiers.svm as svmc
-import lxmls.classifiers.mira as mirac
-import lxmls.classifiers.max_ent_batch as mec_batch
-import lxmls.classifiers.max_ent_online as mec_online
+import sys
+
+sys.path.append("readers/")
+sys.path.append("classifiers/")
+
+import simple_data_set as sds
+
+import linear_classifier as lcc
+import naive_bayes as nbc
+import perceptron as percc
+import svm as svmc
+import mira as mirac
+import max_ent_batch as mec_batch
+import max_ent_online as mec_online
 
 
 def run_all_classifiers(dataset):
@@ -44,7 +50,7 @@ def run_all_classifiers(dataset):
     fig, axis = dataset.add_line(fig, axis, params_me, "ME-LBFGS", "green")
 
     print("MaxEnt Online")
-    me_online = mec_online.MaxEntOnline()
+    me_online = mec_online.MaxEnt_online()
     params_me = me_online.train(dataset.train_X, dataset.train_y)
     print((params_me.reshape(-1)))
     predict = me_online.test(dataset.train_X, params_me)

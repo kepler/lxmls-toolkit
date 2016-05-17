@@ -1,0 +1,9 @@
+# configparser==3.2.0r3
+pyyaml
+nltk
+numpy
+scipy
+mrjob
+theano
+matplotlib
+cairocffi  # solves problem with matplotlib; further needs libffi-dev
