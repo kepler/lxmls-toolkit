@@ -43,7 +43,7 @@ def SGD_train(model, n_iter, bsize=None, lrate=None, train_set=None,
         train_x, train_y = train_set
 
         # Number of mini batches
-        n_batch = train_x.shape[1] / bsize + 1
+        n_batch = train_x.shape[1] // bsize + 1
 
         # Check for Theano vars
         if getattr(model, "_forward", None):
