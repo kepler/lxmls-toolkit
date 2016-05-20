@@ -176,7 +176,7 @@ class NumpyMLP:
         return params
 
     @staticmethod
-    def sanity_checks(actvfunc):
+    def sanity_checks(geometry, actvfunc):
         # CHECK ACTIVATIONS
         if actvfunc:
             # Supported actvfunc
