@@ -33,13 +33,14 @@ def score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentenc
         print(("This is a", language, "sentence."))
     else:
         print(("This seems to be a", language, "sentence, but I'm not sure."))
-    print(("Log-ratio:", abs(val)))
+    print("Log-ratio:", abs(val))
 
 
-counts_pt, total_trimers_pt = load_counts('pt.counts.txt')
-counts_en, total_trimers_en = load_counts('en.counts.txt')
+if __name__ == '__main__':
+    counts_pt, total_trimers_pt = load_counts('pt.counts.txt')
+    counts_en, total_trimers_en = load_counts('en.counts.txt')
 
-while True:
-    test_sentence = eval(input("Type a test sentence and press ENTER:\n"))
-    if not test_sentence: break
+    while True:
+        test_sentence = eval(input("Type a test sentence and press ENTER:\n"))
+        if not test_sentence: break
     score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentence)

@@ -19,7 +19,7 @@ def index2onehot(index, N):
     return onehot
 
 
-class NumpyMLP:
+class NumpyMLP(object):
     """
     Basic MLP with forward-pass and gradient computation
     """
@@ -271,7 +271,7 @@ class TheanoMLP(NumpyMLP):
         # Compile list of gradient functions
         self.grs = [theano.function([x, y], _gr) for _gr in self._grads(x, y)]
 
-    def forward(self, x):
+    def forward(self, x, allOuts=False):
         # Ensure the type matches theano selected type
         x = x.astype(theano.config.floatX)
         return self.fwd(x)

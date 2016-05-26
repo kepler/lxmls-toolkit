@@ -6,4 +6,7 @@ scipy
 mrjob
 theano
 matplotlib
-cairocffi  # solves problem with matplotlib; further needs libffi-dev
+#cairocffi  # solves problem with matplotlib; further needs libffi-dev
+#ipdb
+future
+six

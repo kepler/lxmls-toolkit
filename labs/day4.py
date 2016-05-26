@@ -1,4 +1,5 @@
 # Exercises for lab day 4 Parsing.
+from builtins import input
 import lxmls.parsing.dependency_parser as depp
 
 print("Exercise 4.3.1")

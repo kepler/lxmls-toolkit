@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
 import os
-import urllib.request, urllib.error, urllib.parse
+# import urllib.request, urllib.error, urllib.parse
+from six.moves import urllib
 import numpy as np
 import theano
 import theano.tensor as T
-import pdb
 
 
 # from ipdb import set_trace

@@ -183,12 +183,12 @@ class HMM_Second_Order:
         ##Compare
         value = (nr_tokens + 2 * nr_sentences) + smoothing * self.transition_counts.size
         if abs(sum_transition - value) > 0.001:
-            print(("Transition counts do not match: is - %f should be - %f" % (sum_transition, value)))
+            print("Transition counts do not match: is - %f should be - %f" % (sum_transition, value))
         else:
             print("Transition Counts match")
         value = nr_tokens + 2 * nr_sentences + self.observation_counts.size * smoothing
         if abs(sum_observations - value) > 0.001:
-            print(("Observations counts do not match: is - %f should be - %f" % (sum_observations, value)))
+            print("Observations counts do not match: is - %f should be - %f" % (sum_observations, value))
         else:
             print("Observations Counts match")
 

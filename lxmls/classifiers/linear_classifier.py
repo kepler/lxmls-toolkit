@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class LinearClassifier:
+class LinearClassifier(object):
     def __init__(self):
         self.trained = False
 

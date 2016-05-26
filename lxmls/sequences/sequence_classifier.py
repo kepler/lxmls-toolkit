@@ -2,7 +2,7 @@ import numpy as np
 import lxmls.sequences.sequence_classification_decoder as scd
 
 
-class SequenceClassifier:
+class SequenceClassifier(object):
     """ Implements an abstract sequence classifier."""
 
     def __init__(self, observation_labels, state_labels):

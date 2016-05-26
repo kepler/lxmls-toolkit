@@ -5,7 +5,6 @@ import lxmls.readers.simple_sequence as ssr
 import lxmls.sequences.confusion_matrix as cm
 import lxmls.sequences.hmm as hmmc
 
-# from lxmls.sequences.log_domain import *
 from lxmls.sequences.log_domain import logsum
 
 print("------------")

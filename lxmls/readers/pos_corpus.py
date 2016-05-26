@@ -215,22 +215,22 @@ class PostagCorpus(object):
 
 
     ## Dumps a corpus into a file
-    def save_corpus(self, dir):
-        if not os.path.isdir(dir + "/"):
-            os.mkdir(dir + "/")
-        word_fn = codecs.open(dir + "word.dic", "w", "utf-8")
+    def save_corpus(self, directory):
+        if not os.path.isdir(directory + "/"):
+            os.mkdir(directory + "/")
+        word_fn = codecs.open(directory + "word.dic", "w", "utf-8")
         for word_id, word in enumerate(self.int_to_word):
             word_fn.write("%i\t%s\n" % (word_id, word))
         word_fn.close()
-        tag_fn = open(dir + "tag.dic", "w")
+        tag_fn = open(directory + "tag.dic", "w")
         for tag_id, tag in enumerate(self.int_to_tag):
             tag_fn.write("%i\t%s\n" % (tag_id, tag))
         tag_fn.close()
-        word_count_fn = open(dir + "word.count", "w")
+        word_count_fn = open(directory + "word.count", "w")
         for word_id, counts in list(self.word_counts.items()):
             word_count_fn.write("%i\t%s\n" % (word_id, counts))
         word_count_fn.close()
-        self.sequence_list.save(dir + "sequence_list")
+        self.sequence_list.save(directory + "sequence_list")
 
     ## Loads a corpus from a file
     def load_corpus(self, dir):
