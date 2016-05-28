@@ -35,6 +35,7 @@ For a more matlab-like environment you can use Spider or ipython. If you port
  this to ipython notebook let me know! (ramon@astudillo.com)
 """
 import time
+
 from ipdb import set_trace
 
 print("######################")
@@ -42,7 +43,6 @@ print("   Exercise 5.1")
 print("######################")
 
 # TODO: Find another corpus (SemEval?) and cleaner parameter extraction
-import numpy as np
 import lxmls.readers.sentiment_reader as srs
 
 scr = srs.SentimentCorpus("books")

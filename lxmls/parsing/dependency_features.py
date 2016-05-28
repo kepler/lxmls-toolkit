@@ -1,7 +1,6 @@
 import sys
 import numpy as np
 from scipy.sparse import lil_matrix
-from lxmls.parsing.dependency_reader import *
 
 
 class DependencyFeatures:

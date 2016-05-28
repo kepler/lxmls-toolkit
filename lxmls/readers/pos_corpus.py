@@ -1,5 +1,8 @@
 import codecs
 import gzip
+
+from pathlib import Path
+
 from lxmls.sequences.label_dictionary import *
 from lxmls.sequences.sequence import *
 from lxmls.sequences.sequence_list import *
@@ -100,7 +103,7 @@ class PostagCorpus(object):
                                  max_sent_len=100000,
                                  max_nr_sent=100000):
 
-        ##Build mapping of postags:
+        # Build mapping of postags:
         mapping = {}
         if mapping_file is not None:
             for line in open(mapping_file):
@@ -120,12 +123,14 @@ class PostagCorpus(object):
     ### 
     ############################################
     def read_conll_instances(self, file, max_sent_len, max_nr_sent, mapping):
-        if file.endswith("gz"):
-            zf = gzip.open(file, 'rb')
+        assert isinstance(file, Path)
+        if file.suffix == 'gz':
+            zf = gzip.open(file.open(), 'rb')
             reader = codecs.getreader("utf-8")
             contents = reader(zf)
         else:
-            contents = codecs.open(file, "r", "utf-8")
+            # contents = codecs.open(file, "r", "utf-8")
+            contents = file.open('r', encoding='utf-8')
 
         nr_sent = 0
         instances = []

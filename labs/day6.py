@@ -1,16 +1,11 @@
 """
 Draft from the second deep learning day
 """
-
 import sys
-
-sys.path.append('.')
-root = "/media/mla/new_disk/Priberam/LxMLS/2016-LxMLS/lxmls-toolkit-master"  # TODO: REMOVE
-# root = ""                  # TODO: REMOVE ??
-sys.path.append(root)  # TODO: REMOVE ??
 
 # FOR DEBUGGING
 # from ipdb import set_trace
+from pathlib import Path
 
 print("######################")
 print("   Exercise 6.1")
@@ -22,36 +17,35 @@ import numpy as np
 # Convince yourself a RNN is just an MLP with inputs and outputs at various
 # layers. 
 
-# TODO: Implement a Numpy RNN --- DNOE!!
+# TODO: Implement a Numpy RNN --- DONE!!
 
 # LOAD DATA    
 import lxmls.readers.pos_corpus as pcc
 
-if root:
-    root_os_sep = root + os.sep
-else:
-    root_os_sep = ''
+data_path = Path('../data/')
+assert data_path.exists()
+
 corpus = pcc.PostagCorpus()
-train_seq = corpus.read_sequence_list_conll(root_os_sep + "data" + os.sep + "train-02-21.conll",
+train_seq = corpus.read_sequence_list_conll(data_path / "train-02-21.conll",
                                             max_sent_len=15, max_nr_sent=1000)
-test_seq = corpus.read_sequence_list_conll(root_os_sep + "data" + os.sep + "test-23.conll",
+test_seq = corpus.read_sequence_list_conll(data_path / "test-23.conll",
                                            max_sent_len=15, max_nr_sent=1000)
-dev_seq = corpus.read_sequence_list_conll(root_os_sep + "data" + os.sep + "dev-22.conll",
+dev_seq = corpus.read_sequence_list_conll(data_path / "dev-22.conll",
                                           max_sent_len=15, max_nr_sent=1000)
 
 import lxmls.deep_learning.rnn as rnns
 
-if not os.path.isfile(root_os_sep + 'data' + os.sep + 'senna_50'):
-    rnns.download_embeddings('senna_50', root_os_sep + 'data' + os.sep + 'senna_50')
-E = rnns.extract_embeddings(root_os_sep + 'data' + os.sep + 'senna_50', train_seq.x_dict)
-E = rnns.extract_embeddings(root_os_sep + 'data' + os.sep + 'senna_50', train_seq.x_dict)
+if not (data_path / 'senna_50').exists() and (data_path / 'senna_50').is_file():
+    rnns.download_embeddings('senna_50', str(data_path / 'senna_50'))
+E = rnns.extract_embeddings(str(data_path / 'senna_50'), train_seq.x_dict)
+E = rnns.extract_embeddings(str(data_path / 'senna_50'), train_seq.x_dict)
 
 # CONFIG 
 n_words = E.shape[0]  # Number of words
 n_emb = E.shape[1]  # Size of word embeddings
 n_hidd = 20  # Size of the recurrent layer
 n_tags = len(list(train_seq.y_dict.keys()))  # Number of POS tags
-seed = 0  # seed to initalize rnn parameters
+seed = 0  # seed to initialize rnn parameters
 
 # Test NumpyRNN() with the sample=0
 sample = 0  # sample to be tested
@@ -96,8 +90,7 @@ import theano.tensor as T
 
 # Redo indices so that they are consecutive. Also cast all data to numpy arrays
 # of int32 for compatibility with GPUs and theano.
-train_seq, test_seq, dev_seq = pcc.compacify(train_seq, test_seq, dev_seq,
-                                             theano=True)
+train_seq, test_seq, dev_seq = pcc.compacify(train_seq, test_seq, dev_seq, theano=True)
 
 # SYMBOLIC VARIABLES
 _x = T.ivector('x')  # Input words indices
@@ -138,16 +131,16 @@ print('Difference in gradients:')
 for ii, grad in enumerate(grads):
     print('\tGradient nr', ii, (np.abs(numpy_grads[ii] - grads[ii])).sum())
 
-
 # pdb.set_trace()
 # pass
-## Done comparison
+# Done comparison
 
 #
 # TRAIN MODEL WITH SGD
 #
 
 # TODO: Merge this code with lxmls/deep_learning/sgd.py
+
 
 # Function computing accuracy for a sequence of sentences
 def accuracy(seq):

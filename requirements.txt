@@ -10,3 +10,4 @@ matplotlib
 #ipdb
 future
 six
+pathlib
