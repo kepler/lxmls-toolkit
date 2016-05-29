@@ -1,25 +1,25 @@
 import numpy as np
-from lxmls.sequences.log_domain import *
-import pdb
+
+from lxmls.sequences.log_domain import logzero, logsum
 
 
 class SequenceClassificationDecoder:
-    """ Implements a sequence classification decoder."""
+    """Implements a sequence classification decoder."""
 
     def __init__(self):
         pass
 
-    ######
-    # Computes the forward trellis for a given sequence.
-    # Receives:
-    #
-    # Initial scores: (num_states) array
-    # Transition scores: (length-1, num_states, num_states) array
-    # Final scores: (num_states) array
-    # Emission scoress: (length, num_states) array
-    ######
     @staticmethod
     def run_forward(initial_scores, transition_scores, final_scores, emission_scores):
+        """
+        Computes the forward trellis for a given sequence.
+        Receives:
+
+        Initial scores: (num_states) array
+        Transition scores: (length-1, num_states, num_states) array
+        Final scores: (num_states) array
+        Emission scores: (length, num_states) array
+        """
         length = np.size(emission_scores, 0)  # Length of the sequence.
         num_states = np.size(initial_scores)  # Number of states.
 
@@ -42,17 +42,17 @@ class SequenceClassificationDecoder:
 
         return log_likelihood, forward
 
-    ######
-    # Computes the backward trellis for a given sequence.
-    # Receives:
-    #
-    # Initial scores: (num_states) array
-    # Transition scores: (length-1, num_states, num_states) array
-    # Final scores: (num_states) array
-    # Emission scoress: (length, num_states) array
-    ######
     @staticmethod
     def run_backward(initial_scores, transition_scores, final_scores, emission_scores):
+        """
+        Computes the backward trellis for a given sequence.
+        Receives:
+
+        Initial scores: (num_states) array
+        Transition scores: (length-1, num_states, num_states) array
+        Final scores: (num_states) array
+        Emission scores: (length, num_states) array
+        """
         length = np.size(emission_scores, 0)  # Length of the sequence.
         num_states = np.size(initial_scores)  # Number of states.
 
@@ -75,17 +75,17 @@ class SequenceClassificationDecoder:
 
         return log_likelihood, backward
 
-    ######
-    # Computes the viterbi trellis for a given sequence.
-    # Receives:
-    #
-    # Initial scores: (num_states) array
-    # Transition scores: (length-1, num_states, num_states) array
-    # Final scores: (num_states) array
-    # Emission scoress: (length, num_states) array
-    ######
     @staticmethod
     def run_viterbi(initial_scores, transition_scores, final_scores, emission_scores):
+        """
+        Computes the Viterbi trellis for a given sequence.
+        Receives:
+
+        Initial scores: (num_states) array
+        Transition scores: (length-1, num_states, num_states) array
+        Final scores: (num_states) array
+        Emission scores: (length, num_states) array
+        """
 
         ###########################
         # Solution to Exercise 2.8 
@@ -128,9 +128,9 @@ class SequenceClassificationDecoder:
 
     def run_forward_backward(self, initial_scores, transition_scores, final_scores, emission_scores):
         log_likelihood, forward = self.run_forward(initial_scores, transition_scores, final_scores, emission_scores)
-        print(('Log-Likelihood =', log_likelihood))
+        print('Log-Likelihood =', log_likelihood)
 
         log_likelihood, backward = self.run_backward(initial_scores, transition_scores, final_scores, emission_scores)
-        print(('Log-Likelihood =', log_likelihood))
+        print('Log-Likelihood =', log_likelihood)
 
         return forward, backward

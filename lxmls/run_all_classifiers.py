@@ -1,5 +1,5 @@
-import lxmls.readers.simple_data_set as sds
-import lxmls.classifiers.linear_classifier as lcc
+# import lxmls.readers.simple_data_set as sds
+# import lxmls.classifiers.linear_classifier as lcc
 import lxmls.classifiers.naive_bayes as nbc
 import lxmls.classifiers.perceptron as percc
 import lxmls.classifiers.svm as svmc

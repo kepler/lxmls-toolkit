@@ -1,11 +1,7 @@
-import sys
 import numpy as np
-from lxmls.util.my_math_utils import *
+from lxmls.util.my_math_utils import dict_max, sort_dic_by_value
 
-import operator
-import pdb
-
-## Colour for each pos tag
+# Colour for each pos tag
 tag_colors = {
     'ADV': 'Fuchsia',
     'NOUN': 'ForestGreen',
@@ -22,7 +18,6 @@ tag_colors = {
 
 
 def build_confusion_matrix(truth_seq, prediction_seq, nr_true_pos, nr_states):
-    import matplotlib.pyplot as plt
     matrix = {}
     for i in range(nr_true_pos):
         matrix[i] = {}

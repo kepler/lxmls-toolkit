@@ -64,3 +64,16 @@ class DiscriminativeSequenceClassifier(sc.SequenceClassifier):
             final_scores[prev_tag_id] = score
 
         return initial_scores, transition_scores, final_scores, emission_scores
+
+    def save_model(self, directory):
+        with open(directory + "parameters.txt", 'w') as fn:
+            for p_id, p in enumerate(self.parameters):
+                fn.write("%i\t%f\n" % (p_id, p))
+
+    def load_model(self, directory):
+        with open(directory + "parameters.txt", 'r') as fn:
+            for line in fn:
+                tokens = line.strip().split("\t")
+                p_id = int(tokens[0])
+                p = float(tokens[1])
+                self.parameters[p_id] = p

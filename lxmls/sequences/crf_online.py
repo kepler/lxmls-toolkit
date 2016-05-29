@@ -1,8 +1,6 @@
-import sys
 import numpy as np
-from . import discriminative_sequence_classifier as dsc
 
-import pdb
+from lxmls.sequences import discriminative_sequence_classifier as dsc
 
 
 class CRFOnline(dsc.DiscriminativeSequenceClassifier):
@@ -90,11 +88,13 @@ class CRFOnline(dsc.DiscriminativeSequenceClassifier):
             if pos > 0:
                 # Update transition features.
                 prev_y_t_true = sequence.y[pos - 1]
-                true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true, prev_y_t_true)
+                true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true,
+                                                                                       prev_y_t_true)
                 self.parameters[true_transition_features] += eta
                 for state in range(num_states):
                     for prev_state in range(num_states):
-                        state_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, state, prev_state)
+                        state_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1,
+                                                                                                state, prev_state)
                         self.parameters[state_transition_features] -= \
                             eta * transition_posteriors[pos - 1, state, prev_state]
 
@@ -107,18 +107,3 @@ class CRFOnline(dsc.DiscriminativeSequenceClassifier):
             self.parameters[state_final_features] -= eta * state_posteriors[pos - 1, state]
 
         return objective_value
-
-    def save_model(self, dir):
-        fn = open(dir + "parameters.txt", 'w')
-        for p_id, p in enumerate(self.parameters):
-            fn.write("%i\t%f\n" % (p_id, p))
-        fn.close()
-
-    def load_model(self, dir):
-        fn = open(dir + "parameters.txt", 'r')
-        for line in fn:
-            toks = line.strip().split("\t")
-            p_id = int(toks[0])
-            p = float(toks[1])
-            self.parameters[p_id] = p
-        fn.close()

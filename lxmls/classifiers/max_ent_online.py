@@ -1,12 +1,10 @@
-import sys
 import numpy as np
-import scipy.optimize.lbfgsb as opt2
-from lxmls.util.my_math_utils import *
 import lxmls.classifiers.linear_classifier as lc
+from lxmls.util.my_math_utils import l2norm_squared
 
 
 ################
-### Train a maxent in a online setting using stochastic gradient
+# Train a maxent in a online setting using stochastic gradient
 ################
 class MaxEntOnline(lc.LinearClassifier):
     def __init__(self, nr_epochs=10, initial_step=1.0, alpha=1.0, regularizer=1.0):

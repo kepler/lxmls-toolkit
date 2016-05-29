@@ -1,13 +1,11 @@
 import pdb
 
-from lxmls.sequences.label_dictionary import *
+from lxmls.sequences.label_dictionary import LabelDictionary
 
 
-#################
-### Replicates the same features as the HMM
-### One for word/tag and tag/tag pair
-#################
-class IDFeatures:
+# Replicates the same features as the HMM
+# One for word/tag and tag/tag pair
+class IDFeatures(object):
     """
         Base class to extract features from a particular dataset.
 
@@ -69,12 +67,12 @@ class IDFeatures:
         transition_features = []
         final_features = []
 
-        ## Take care of first position
+        # Take care of first position
         features = []
         features = self.add_initial_features(sequence, sequence.y[0], features)
         initial_features.append(features)
 
-        ## Take care of middle positions
+        # Take care of middle positions
         for pos, tag in enumerate(sequence.y):
             features = []
             features = self.add_emission_features(sequence, pos, sequence.y[pos], features)
@@ -86,7 +84,7 @@ class IDFeatures:
                 features = self.add_transition_features(sequence, pos - 1, tag, prev_tag, features)
                 transition_features.append(features)
 
-        ## Take care of final position
+        # Take care of final position
         features = []
         features = self.add_final_features(sequence, sequence.y[-1], features)
         final_features.append(features)
@@ -110,7 +108,7 @@ class IDFeatures:
         return all_feat
 
     # f(t,y_t,y_(t-1),X)
-    ##Speed up of code
+    # Speed up of code
     def get_transition_features(self, sequence, pos, y, y_prev):
         assert (0 <= pos < len(sequence.x)), pdb.set_trace()
 

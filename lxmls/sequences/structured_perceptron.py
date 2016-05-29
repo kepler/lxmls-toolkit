@@ -1,11 +1,10 @@
-import sys
 import numpy as np
+
 import lxmls.sequences.discriminative_sequence_classifier as dsc
-import pdb
 
 
 class StructuredPerceptron(dsc.DiscriminativeSequenceClassifier):
-    """ Implements a first order CRF"""
+    """Implements a first order CRF"""
 
     def __init__(self, observation_labels, state_labels, feature_mapper,
                  num_epochs=10, learning_rate=1.0, averaged=True):
@@ -29,7 +28,7 @@ class StructuredPerceptron(dsc.DiscriminativeSequenceClassifier):
                 num_mistakes_total += num_mistakes
             self.params_per_epoch.append(self.parameters.copy())
             acc = 1.0 - float(num_mistakes_total) / float(num_labels_total)
-            print(("Epoch: %i Accuracy: %f" % (epoch, acc)))
+            print("Epoch: %i Accuracy: %f" % (epoch, acc))
         self.trained = True
 
         if self.averaged:
@@ -75,14 +74,16 @@ class StructuredPerceptron(dsc.DiscriminativeSequenceClassifier):
                 self.parameters[hat_emission_features] -= self.learning_rate
 
             if pos > 0:
-                ## update bigram features
-                ## If true bigram != predicted bigram update bigram features
+                # update bigram features
+                # If true bigram != predicted bigram update bigram features
                 prev_y_t_true = sequence.y[pos - 1]
                 prev_y_t_hat = y_hat[pos - 1]
                 if y_t_true != y_t_hat or prev_y_t_true != prev_y_t_hat:
-                    true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true, prev_y_t_true)
+                    true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true,
+                                                                                           prev_y_t_true)
                     self.parameters[true_transition_features] += self.learning_rate
-                    hat_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_hat, prev_y_t_hat)
+                    hat_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_hat,
+                                                                                          prev_y_t_hat)
                     self.parameters[hat_transition_features] -= self.learning_rate
 
         pos = len(sequence.x)
@@ -99,18 +100,3 @@ class StructuredPerceptron(dsc.DiscriminativeSequenceClassifier):
 
         # End of solution to Exercise 3.3 
         ###########################
-
-    def save_model(self, dir):
-        fn = open(dir + "parameters.txt", 'w')
-        for p_id, p in enumerate(self.parameters):
-            fn.write("%i\t%f\n" % (p_id, p))
-        fn.close()
-
-    def load_model(self, dir):
-        fn = open(dir + "parameters.txt", 'r')
-        for line in fn:
-            toks = line.strip().split("\t")
-            p_id = int(toks[0])
-            p = float(toks[1])
-            self.parameters[p_id] = p
-        fn.close()

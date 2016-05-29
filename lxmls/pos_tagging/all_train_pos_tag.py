@@ -1,31 +1,26 @@
-import sys
-import codecs
-
-from sequences.sequence import *
-from sequences.sequence_list import *
-import readers.pos_corpus as pcc
-import readers.brown_pos_corpus as bpc
-import sequences.extended_feature as exfc
-import sequences.structured_perceptron as spc
-import sequences.confusion_matrix as bcm
+from lxmls.readers.pos_corpus import PostagCorpus
+from lxmls.sequences.extended_feature import ExtendedFeatures
+from lxmls.sequences.structured_perceptron import StructuredPerceptron
 
 MAX_SENT_SIZE = 1000
 MAX_NR_SENTENCES = 100000
-MODEL_DIR = "/Users/graca/Projects/swm_src/feeds/models/all_data_postag/"
+# MODEL_DIR = "/Users/graca/Projects/swm_src/feeds/models/all_data_postag/"
 
 
 def build_corpus_features():
-    corpus = pcc.PostagCorpus()
-    train_seq = corpus.read_sequence_list_conll("../../data/train-02-21.conll", max_sent_len=MAX_SENT_SIZE, max_nr_sent=MAX_NR_SENTENCES)
+    corpus = PostagCorpus()
+    train_seq = corpus.read_sequence_list_conll("../../data/train-02-21.conll", max_sent_len=MAX_SENT_SIZE,
+                                                max_nr_sent=MAX_NR_SENTENCES)
     corpus.add_sequence_list(train_seq)
     dev_seq = corpus.read_sequence_list_conll("../../data/dev-22.conll")
     corpus.add_sequence_list(dev_seq)
-    categories = ['adventure', 'belles_lettres', 'editorial', 'fiction', 'government', 'hobbies', 'humor', 'learned', 'lore', 'mystery', 'news', 'religion',
+    categories = ['adventure', 'belles_lettres', 'editorial', 'fiction', 'government', 'hobbies', 'humor', 'learned',
+                  'lore', 'mystery', 'news', 'religion',
                   'reviews', 'romance']
     for cat in categories:
         brown_seq = corpus.read_sequence_list_brown(categories=cat)
         corpus.add_sequence_list(brown_seq)
-    features = exfc.ExtendedFeatures(corpus)
+    features = ExtendedFeatures(corpus)
     features.build_features()
     corpus.save_corpus(MODEL_DIR)
     features.save_features(MODEL_DIR + "features.txt")
@@ -33,7 +28,7 @@ def build_corpus_features():
 
 
 def train_pos(corpus, features):
-    model = spc.StructuredPercetron(corpus, features)
+    model = StructuredPerceptron(corpus, features)
     model.nr_rounds = 10
     model.train_supervised(corpus.sequence_list.seq_list)
     model.save_model(MODEL_DIR)
@@ -57,11 +52,11 @@ def eval_brown(corpus, features, model):
 
 
 def load_model():
-    corpus = pcc.PostagCorpus()
+    corpus = PostagCorpus()
     corpus.load_corpus(MODEL_DIR)
-    features = exfc.ExtendedFeatures(corpus)
+    features = ExtendedFeatures(corpus)
     features.load_features(MODEL_DIR + "features.txt", corpus)
-    model = spc.StructuredPercetron(corpus, features)
+    model = StructuredPerceptron(corpus, features)
     model.load_model(MODEL_DIR)
     return corpus, features, model
 

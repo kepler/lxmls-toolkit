@@ -1,8 +1,6 @@
-import numpy as np
-import lxmls.sequences.sequence_classifier as sc
 import lxmls.sequences.confusion_matrix as cm
+import lxmls.sequences.sequence_classifier as sc
 from lxmls.sequences.log_domain import *
-import pdb
 
 
 class HMM(sc.SequenceClassifier):
@@ -119,18 +117,18 @@ class HMM(sc.SequenceClassifier):
         num_observations = self.get_num_observations()
 
         self.initial_counts.fill(1)
-        self.initial_counts += jitter * np.random.rand(num_states)
+        self.initial_counts += jitter * np.random.random(num_states)
         self.transition_counts.fill(1)
-        self.transition_counts += jitter * np.random.rand(num_states, num_states)
+        self.transition_counts += jitter * np.random.random((num_states, num_states))
         self.emission_counts.fill(1)
-        self.emission_counts += jitter * np.random.rand(num_observations, num_states)
+        self.emission_counts += jitter * np.random.random((num_observations, num_states))
         self.final_counts.fill(1)
-        self.final_counts += jitter * np.random.rand(num_states)
+        self.final_counts += jitter * np.random.random(num_states)
         self.compute_parameters()
         self.clear_counts()
 
     def clear_counts(self, smoothing=0):
-        """ Clear all the count tables."""
+        """Clear all the count tables."""
         self.initial_counts.fill(smoothing)
         self.transition_counts.fill(smoothing)
         self.final_counts.fill(smoothing)
@@ -218,13 +216,15 @@ class HMM(sc.SequenceClassifier):
             posterior_pred_train = self.posterior_decode_corpus(train)
             eval_viterbi_train = self.evaluate_corpus(train, viterbi_pred_train)
             eval_posterior_train = self.evaluate_corpus(train, posterior_pred_train)
-            print(("Smoothing %f --  Train Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (i, eval_posterior_train, eval_viterbi_train)))
+            print(("Smoothing %f --  Train Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (
+            i, eval_posterior_train, eval_viterbi_train)))
 
             viterbi_pred_test = self.viterbi_decode_corpus(test)
             posterior_pred_test = self.posterior_decode_corpus(test)
             eval_viterbi_test = self.evaluate_corpus(test, viterbi_pred_test)
             eval_posterior_test = self.evaluate_corpus(test, posterior_pred_test)
-            print(("Smoothing %f -- Test Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (i, eval_posterior_test, eval_viterbi_test)))
+            print(("Smoothing %f -- Test Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (
+            i, eval_posterior_test, eval_viterbi_test)))
             if eval_posterior_test > max_acc:
                 max_acc = eval_posterior_test
                 max_smooth = i

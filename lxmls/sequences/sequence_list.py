@@ -1,5 +1,4 @@
-import lxmls.sequences.sequence as seq
-import pdb
+import lxmls.sequences.sequence as sequence
 
 
 class _SequenceIterator(object):
@@ -54,7 +53,7 @@ class SequenceList(object):
         num_seqs = len(self.seq_list)
         x_ids = [self.x_dict.get_label_id(name) for name in x]
         y_ids = [self.y_dict.get_label_id(name) for name in y]
-        self.seq_list.append(seq.Sequence(self, x_ids, y_ids, num_seqs))
+        self.seq_list.append(sequence.Sequence(self, x_ids, y_ids, num_seqs))
 
     def save(self, file):
         seq_fn = open(file, "w")

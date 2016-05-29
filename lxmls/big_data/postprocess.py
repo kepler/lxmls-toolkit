@@ -18,7 +18,8 @@ def score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentenc
     val = 0.
     for i in range(len(test_sentence) - 3):
         tri = test_sentence[i:i + 3]
-        tri_pt = counts_pt.get(tri, 1.0)  # this will attempt to get counts from the dictionary; if it fails, it will return 1.0
+        tri_pt = counts_pt.get(tri,
+                               1.0)  # this will attempt to get counts from the dictionary; if it fails, it will return 1.0
         log_prob_tri_pt = math.log10(tri_pt / total_trimers_pt)
         tri_en = counts_en.get(tri, 1.0)
         log_prob_tri_en = math.log10(tri_en / total_trimers_en)
@@ -30,9 +31,9 @@ def score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentenc
     else:
         language = "EN"
     if abs(val) >= 5:
-        print(("This is a", language, "sentence."))
+        print("This is a", language, "sentence.")
     else:
-        print(("This seems to be a", language, "sentence, but I'm not sure."))
+        print("This seems to be a", language, "sentence, but I'm not sure.")
     print("Log-ratio:", abs(val))
 
 

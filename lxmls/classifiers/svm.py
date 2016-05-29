@@ -1,7 +1,6 @@
-import sys
 import numpy as np
 import lxmls.classifiers.linear_classifier as lc
-from lxmls.util.my_math_utils import *
+from lxmls.util.my_math_utils import l2norm_squared
 
 
 class SVM(lc.LinearClassifier):

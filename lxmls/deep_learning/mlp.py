@@ -70,8 +70,7 @@ class NumpyMLP(object):
         tilde_z = x
 
         for n in range(self.n_layers):
-
-            # Get weigths and bias of the layer (even and odd positions)
+            # Get weights and bias of the layer (even and odd positions)
             W = self.params[2 * n]
             b = self.params[2 * n + 1]
 
@@ -109,7 +108,7 @@ class NumpyMLP(object):
 
         for n in np.arange(self.n_layers - 1, -1, -1):
 
-            # Get weigths and bias (always in even and odd positions)
+            # Get weights and bias (always in even and odd positions)
             # Note that sometimes we need the weight from the next layer
             W = self.params[2 * n]
             b = self.params[2 * n + 1]

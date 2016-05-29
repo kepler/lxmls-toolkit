@@ -1,28 +1,27 @@
 import codecs
 import gzip
+import os
 
 from pathlib import Path
 
-from lxmls.sequences.label_dictionary import *
-from lxmls.sequences.sequence import *
-from lxmls.sequences.sequence_list import *
 from os.path import dirname
 import numpy as np  # This is also needed for theano=True
+from lxmls.sequences.label_dictionary import LabelDictionary
 
-# from nltk.corpus import brown
 
-## Directory where the data files are located.
-data_dir = dirname(__file__) + "/../../data/"
+# Directory where the data files are located.
+# data_dir = dirname(__file__) + "/../../data/"
 
-### Train and test files for english WSJ part of the Penn Tree Bank
-en_train = data_dir + "train-02-21.conll"
-en_dev = data_dir + "dev-22.conll"
-en_test = data_dir + "test-23.conll"
+# Train and test files for english WSJ part of the Penn Tree Bank
+# en_train = data_dir + "train-02-21.conll"
+# en_dev = data_dir + "dev-22.conll"
+# en_test = data_dir + "test-23.conll"
 
-### Train and test files for portuguese Floresta sintatica
-pt_train = data_dir + "pt_train.txt"
-pt_dev = ""
-pt_test = data_dir + "pt_test.txt"
+# Train and test files for portuguese Floresta sintatica
+# pt_train = data_dir + "pt_train.txt"
+# pt_dev = ""
+# pt_test = data_dir + "pt_test.txt"
+from lxmls.sequences.sequence_list import SequenceList
 
 
 def compacify(train_seq, test_seq, dev_seq, theano=False):
@@ -219,7 +218,7 @@ class PostagCorpus(object):
     #     return seq_list
 
 
-    ## Dumps a corpus into a file
+    # Dumps a corpus into a file
     def save_corpus(self, directory):
         if not os.path.isdir(directory + "/"):
             os.mkdir(directory + "/")
@@ -238,23 +237,23 @@ class PostagCorpus(object):
         self.sequence_list.save(directory + "sequence_list")
 
     ## Loads a corpus from a file
-    def load_corpus(self, dir):
-        word_fn = codecs.open(dir + "word.dic", "r", "utf-8")
+    def load_corpus(self, directory):
+        word_fn = codecs.open(directory + "word.dic", "r", "utf-8")
         for line in word_fn:
             word_nr, word = line.strip().split("\t")
             self.int_to_word.append(word)
             self.word_dict[word] = int(word_nr)
         word_fn.close()
-        tag_fn = open(dir + "tag.dic", "r")
+        tag_fn = open(directory + "tag.dic", "r")
         for line in tag_fn:
             tag_nr, tag = line.strip().split("\t")
             if tag not in self.tag_dict:
                 self.int_to_tag.append(tag)
                 self.tag_dict[tag] = int(tag_nr)
         tag_fn.close()
-        word_count_fn = open(dir + "word.count", "r")
+        word_count_fn = open(directory + "word.count", "r")
         for line in word_count_fn:
             word_nr, word_count = line.strip().split("\t")
             self.word_counts[int(word_nr)] = int(word_count)
         word_count_fn.close()
-        self.sequence_list.load(dir + "sequence_list")
+        self.sequence_list.load(directory + "sequence_list")

@@ -1,8 +1,6 @@
 import sys
 import numpy as np
 import time
-import theano
-import theano.tensor as T
 
 
 def class_acc(hat_y, y_ref):
@@ -34,8 +32,8 @@ def sanity_checks(batch_up, n_batch, bsize, lrate, train_set):
                              "bsize, lrate and train_set")
 
 
-def SGD_train(model, n_iter, bsize=None, lrate=None, train_set=None,
-              batch_up=None, n_batch=None, devel_set=None, model_dbg=None):
+def SGDTrain(model, n_iter, bsize=None, lrate=None, train_set=None,
+             batch_up=None, n_batch=None, devel_set=None, model_dbg=None):
     # SANITY CHECKS:
     sanity_checks(batch_up, n_batch, bsize, lrate, train_set)
 
@@ -67,7 +65,6 @@ def SGD_train(model, n_iter, bsize=None, lrate=None, train_set=None,
                 p_train += -batch_up(j)
 
             else:
-
                 # Manual batch update
 
                 # Mini batch

@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 import lxmls.classifiers.linear_classifier as lc
 

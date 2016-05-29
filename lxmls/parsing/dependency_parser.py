@@ -1,10 +1,9 @@
-import sys
 import numpy as np
-from lxmls.parsing.dependency_reader import *
-from lxmls.parsing.dependency_writer import *
-from lxmls.parsing.dependency_features import *
-from lxmls.parsing.dependency_decoder import *
-from lxmls.util.my_math_utils import *
+
+from lxmls.parsing.dependency_decoder import DependencyDecoder
+from lxmls.parsing.dependency_features import DependencyFeatures
+from lxmls.parsing.dependency_reader import DependencyReader
+from lxmls.parsing.dependency_writer import DependencyWriter
 
 
 class DependencyParser:
@@ -57,7 +56,7 @@ class DependencyParser:
                         n_mistakes += 1
                     n_tokens += 1
                 n_instances += 1
-            print(("Training accuracy: {0}".format(np.double(n_tokens - n_mistakes) / np.double(n_tokens))))
+            print("Training accuracy: {0}".format(np.double(n_tokens - n_mistakes) / np.double(n_tokens)))
             total += self.weights
 
         self.weights = total / np.double(n_epochs)
@@ -107,7 +106,7 @@ class DependencyParser:
                 n_instances += 1
                 t += 1
 
-            print(("Training objective: {0}".format(objective / n_instances)))
+            print("Training objective: {0}".format(objective / n_instances))
 
     def test(self):
         n_mistakes = 0
@@ -134,6 +133,6 @@ class DependencyParser:
                 n_tokens += 1
             n_instances += 1
             arr_heads_pred.append(heads_pred)
-        print(("Test accuracy ({0} test instances): {1}".format(n_instances, np.double(n_tokens - n_mistakes) / np.double(n_tokens))))
+        print("Test accuracy ({0} test instances): {1}".format(n_instances, np.double(n_tokens - n_mistakes) / np.double(n_tokens)))
 
         self.writer.save(self.language, arr_heads_pred)

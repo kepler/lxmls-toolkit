@@ -1,8 +1,6 @@
-import sys
 import numpy as np
 from scipy import optimize
 import lxmls.sequences.discriminative_sequence_classifier as dsc
-import pdb
 
 
 class CRFBatch(dsc.DiscriminativeSequenceClassifier):
