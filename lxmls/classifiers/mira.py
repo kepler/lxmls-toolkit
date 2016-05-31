@@ -1,12 +1,15 @@
-import sys
+from __future__ import division
+
 import numpy as np
+from builtins import range
+
 import lxmls.classifiers.linear_classifier as lc
-from lxmls.util.my_math_utils import *
+from lxmls.util.my_math_utils import l2norm_squared
 
 
 class Mira(lc.LinearClassifier):
     def __init__(self, nr_rounds=10, regularizer=1.0, averaged=True):
-        lc.LinearClassifier.__init__(self)
+        super(Mira, self).__init__()
         self.trained = False
         self.nr_rounds = nr_rounds
         self.regularizer = regularizer
@@ -20,8 +23,8 @@ class Mira(lc.LinearClassifier):
         nr_x, nr_f = x.shape
         nr_c = np.unique(y).shape[0]
         w = np.zeros((nr_f, nr_c))
-        for round_nr in xrange(self.nr_rounds):
-            for nr in xrange(nr_x):
+        for round_nr in range(self.nr_rounds):
+            for nr in range(nr_x):
 
                 # use seed to generate permutation
                 np.random.seed(seed)
@@ -29,7 +32,7 @@ class Mira(lc.LinearClassifier):
                 perm = np.random.permutation(nr_x)
 
                 # change the seed so next epoch we don't get the same permutation
-                seed = seed + 1
+                seed += 1
 
                 inst = perm[nr]
                 scores = self.get_scores(x[inst:inst + 1, :], w)
@@ -39,14 +42,14 @@ class Mira(lc.LinearClassifier):
                 true_margin = scores[:, y_true]
                 predicted_margin = scores[:, y_hat]
                 dist = np.abs(y_true - y_hat)
-                # # Compute loss
+                # Compute loss
                 loss = predicted_margin - true_margin + dist
-                ## Compute stepsize
-                if (y_hat != y_true):
-                    if ( predicted_margin == true_margin):
+                # Compute stepsize
+                if y_hat != y_true:
+                    if predicted_margin == true_margin:
                         stepsize = 1 / self.regularizer
                     else:
-                        #stepsize = np.min([1/self.agress,loss/l2norm_squared(true_margin-predicted_margin)])
+                        # stepsize = np.min([1/self.agress,loss/l2norm_squared(true_margin-predicted_margin)])
                         stepsize = np.min([1 / self.regularizer, loss / l2norm_squared(x[inst:inst + 1])])
                     w[:, y_true] += stepsize * x[inst:inst + 1, :].transpose()
                     w[:, y_hat] -= stepsize * x[inst:inst + 1, :].transpose()
@@ -56,15 +59,13 @@ class Mira(lc.LinearClassifier):
             y_pred = self.test(x_orig, w)
             acc = self.evaluate(y, y_pred)
             self.trained = False
-            print "Rounds: %i Accuracy: %f" % ( round_nr, acc)
+            print("Rounds: %i Accuracy: %f" % (round_nr, acc))
         self.trained = True
 
-        if self.averaged == True:
+        if self.averaged:
             new_w = 0
             for old_w in self.params_per_round:
                 new_w += old_w
-            new_w = new_w / len(self.params_per_round)
+            new_w /= len(self.params_per_round)
             return new_w
         return w
-
-
