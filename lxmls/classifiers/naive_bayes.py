@@ -1,4 +1,8 @@
+from __future__ import division
+
 import numpy as np
+from builtins import range
+
 import lxmls.classifiers.linear_classifier as lc
 from lxmls.distributions.gaussian import estimate_gaussian
 
@@ -33,18 +37,18 @@ class NaiveBayes(lc.LinearClassifier):
     @staticmethod
     def train_gaussian(x, y, nr_x, nr_f, nr_c):
         prior = np.zeros(nr_c)
-        likelihood = np.zeros((nr_f, nr_c))
+        # likelihood = np.zeros((nr_f, nr_c))
         classes = np.unique(y)
         means = np.zeros((nr_c, nr_f))
         variances = np.zeros((nr_c, nr_f))
         for i in range(nr_c):
             idx, _ = np.nonzero(y == classes[i])
-            prior[i] = 1.0 * len(idx) / len(y)
+            prior[i] = len(idx) / len(y)
             for f in range(nr_f):
                 g = estimate_gaussian(x[idx, f])
                 means[i, f] = g.mean
                 variances[i, f] = g.variance
-        ## Take the mean of the covariance for each matric
+        # Take the mean of the covariance for each matric
         variances = np.mean(variances, 1)
         params = np.zeros((nr_f + 1, nr_c))
         for i in range(nr_c):
@@ -53,23 +57,21 @@ class NaiveBayes(lc.LinearClassifier):
             params[1:, i] = (1 / variances[i] * means[i]).transpose()
         return params
 
-    ##########################
-    ### Train a gaussian distribution
-    ### Has one multinomial for each feature
-    ##########################
     @staticmethod
     def train_multinomial(x, y, nr_x, nr_f, nr_c):
+        """
+        Train a gaussian distribution.
+        Has one multinomial for each feature.
+        """
         prior = np.zeros(nr_c)
-        ind_per_class = {}
         classes = np.unique(y)
         for i in range(nr_c):
             idx, _ = np.nonzero(y == classes[i])
-            ind_per_class = idx
         likelihood = np.zeros((nr_f, nr_c))
         sums = np.zeros((nr_f, 1))
         for i in range(nr_c):
             idx, _ = np.nonzero(y == classes[i])
-            prior[i] = 1.0 * len(idx) / len(y)
+            prior[i] = len(idx) / len(y)
 
             value = x[idx, :].sum(0)
             sums[:, 0] += value

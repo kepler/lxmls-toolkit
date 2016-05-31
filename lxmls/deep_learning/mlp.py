@@ -1,8 +1,9 @@
 import numpy as np
-from scipy.misc import logsumexp
 import pickle  # To store classes on files
 import theano
 import theano.tensor as T
+from builtins import range
+from scipy.misc import logsumexp
 
 
 def index2onehot(index, N):
@@ -54,16 +55,16 @@ class NumpyMLP(object):
             self.params = self.init_weights(rng, geometry, actvfunc)
             self.actvfunc = actvfunc
 
-    def forward(self, x, allOuts=False):
+    def forward(self, x, all_outs=False):
         """
         Forward pass
 
-        allOuts = True  return intermediate activations
+        all_outs = True  return intermediate activations
         """
 
         # This will store activations at each layer and the input. This is 
         # needed to compute backpropagation 
-        if allOuts:
+        if all_outs:
             activations = []
 
         # Input
@@ -86,10 +87,10 @@ class NumpyMLP(object):
                 # underflow/overflow
                 tilde_z = np.exp(z - logsumexp(z, 0))
 
-            if allOuts:
+            if all_outs:
                 activations.append(tilde_z)
 
-        if allOuts:
+        if all_outs:
             tilde_z = activations
 
         return tilde_z
@@ -101,7 +102,7 @@ class NumpyMLP(object):
        """
 
         # Run forward and store activations for each layer
-        activations = self.forward(x, allOuts=True)
+        activations = self.forward(x, all_outs=True)
 
         # For each layer in reverse store the gradients for each parameter
         nabla_params = [None] * (2 * self.n_layers)
@@ -111,7 +112,7 @@ class NumpyMLP(object):
             # Get weights and bias (always in even and odd positions)
             # Note that sometimes we need the weight from the next layer
             W = self.params[2 * n]
-            b = self.params[2 * n + 1]
+            # b = self.params[2 * n + 1]
             if n != self.n_layers - 1:
                 W_next = self.params[2 * (n + 1)]
 
@@ -270,7 +271,7 @@ class TheanoMLP(NumpyMLP):
         # Compile list of gradient functions
         self.grs = [theano.function([x, y], _gr) for _gr in self._grads(x, y)]
 
-    def forward(self, x, allOuts=False):
+    def forward(self, x, all_outs=False):
         # Ensure the type matches theano selected type
         x = x.astype(theano.config.floatX)
         return self.fwd(x)
@@ -310,16 +311,16 @@ class TheanoMLP(NumpyMLP):
         # Overwrite our params
         self.params = params
 
-    def _forward(self, x, allOuts=False):
+    def _forward(self, x, all_outs=False):
         """
         Symbolic forward pass
 
-        allOuts = True  return symbolic input and intermediate activations
+        all_outs = True  return symbolic input and intermediate activations
         """
 
         # This will store activations at each layer and the input. This is 
         # needed to compute backpropagation 
-        if allOuts:
+        if all_outs:
             activations = [x]
 
         # Input
@@ -349,13 +350,12 @@ class TheanoMLP(NumpyMLP):
             # Name variable
             tilde_z.name = 'tilde_z%d' % (n + 1)
 
-            if allOuts:
+            if all_outs:
                 activations.append(tilde_z)
         # End of solution to Exercise 6.4 
         ###########################
 
-
-        if allOuts:
+        if all_outs:
             tilde_z = activations
 
         return tilde_z

@@ -1,4 +1,8 @@
+from __future__ import division
+
 import numpy as np
+from builtins import range
+
 import lxmls.classifiers.linear_classifier as lc
 from lxmls.util.my_math_utils import l2norm_squared
 
@@ -38,9 +42,9 @@ class Mira(lc.LinearClassifier):
                 true_margin = scores[:, y_true]
                 predicted_margin = scores[:, y_hat]
                 dist = np.abs(y_true - y_hat)
-                # # Compute loss
+                # Compute loss
                 loss = predicted_margin - true_margin + dist
-                ## Compute stepsize
+                # Compute stepsize
                 if y_hat != y_true:
                     if predicted_margin == true_margin:
                         stepsize = 1 / self.regularizer
@@ -55,7 +59,7 @@ class Mira(lc.LinearClassifier):
             y_pred = self.test(x_orig, w)
             acc = self.evaluate(y, y_pred)
             self.trained = False
-            print(("Rounds: %i Accuracy: %f" % (round_nr, acc)))
+            print("Rounds: %i Accuracy: %f" % (round_nr, acc))
         self.trained = True
 
         if self.averaged:

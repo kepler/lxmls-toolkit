@@ -4,7 +4,6 @@ import lxmls.readers.pos_corpus as pcc
 import lxmls.readers.simple_sequence as ssr
 import lxmls.sequences.confusion_matrix as cm
 import lxmls.sequences.hmm as hmmc
-
 from lxmls.sequences.log_domain import logsum
 
 print("------------")
@@ -35,8 +34,7 @@ print("------------")
 print("Exercise 2.3")
 print("------------")
 
-initial_scores, transition_scores, final_scores, emission_scores = \
-    hmm.compute_scores(simple.train.seq_list[0])
+initial_scores, transition_scores, final_scores, emission_scores = hmm.compute_scores(simple.train.seq_list[0])
 print(initial_scores)
 print(transition_scores)
 print(final_scores)
@@ -46,7 +44,7 @@ print("------------")
 print("Exercise 2.4")
 print("------------")
 
-a = np.random.rand(10)
+a = np.random.random((10,))
 print(np.log(sum(np.exp(a))))
 print(np.log(sum(np.exp(10 * a))))
 print(np.log(sum(np.exp(100 * a))))
@@ -152,13 +150,12 @@ viterbi_pred_test = hmm.viterbi_decode_corpus(test_seq)
 posterior_pred_test = hmm.posterior_decode_corpus(test_seq)
 eval_viterbi_test = hmm.evaluate_corpus(test_seq, viterbi_pred_test)
 eval_posterior_test = hmm.evaluate_corpus(test_seq, posterior_pred_test)
-print("Best Smoothing %f --  Test Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (best_smothing, eval_posterior_test, eval_viterbi_test))
+print("Best Smoothing %f --  Test Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (
+best_smothing, eval_posterior_test, eval_viterbi_test))
 
-confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test,
-                                             len(corpus.tag_dict), hmm.get_num_states())
+confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test, len(corpus.tag_dict))
 
-cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict,
-                            list(range(hmm.get_num_states())), 'Confusion matrix')
+cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, list(range(hmm.get_num_states())))
 
 print("------------")
 print("Exercise 2.10")
@@ -171,7 +168,5 @@ posterior_pred_test = hmm.posterior_decode_corpus(test_seq)
 eval_viterbi_test = hmm.evaluate_corpus(test_seq, viterbi_pred_test)
 eval_posterior_test = hmm.evaluate_corpus(test_seq, posterior_pred_test)
 
-confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test,
-                                             len(corpus.tag_dict), hmm.get_num_states())
-cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict,
-                            list(range(hmm.get_num_states())), 'Confusion matrix')
+confusion_matrix = cm.build_confusion_matrix(test_seq.seq_list, viterbi_pred_test, len(corpus.tag_dict))
+cm.plot_confusion_bar_graph(confusion_matrix, corpus.tag_dict, list(range(hmm.get_num_states())))

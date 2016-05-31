@@ -4,7 +4,7 @@ import lxmls.parsing.dependency_parser as depp
 
 print("Exercise 4.3.1")
 
-dp = depp.DependencyParser()
+dp = depp.DependencyParser(base_directory='../data/deppars')
 dp.read_data("portuguese")
 
 input("Press Enter to go on to the next exercise")
@@ -52,7 +52,7 @@ input("Press Enter to go on to the next exercise")
 
 print("Exercise 4.3.6")
 
-dp = depp.DependencyParser()
+dp = depp.DependencyParser(base_directory='../data/deppars')
 dp.features.use_lexical = True
 dp.features.use_distance = True
 dp.features.use_contextual = True

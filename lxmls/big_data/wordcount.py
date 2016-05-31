@@ -1,4 +1,3 @@
-# Import the necessary libraries:
 from mrjob.job import MRJob
 
 

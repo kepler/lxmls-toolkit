@@ -1,13 +1,13 @@
 from nltk.corpus import brown
-import sys
-from sequences.sequence import *
-from sequences.sequence_list import *
+
+from lxmls.sequences.sequence_list import SequenceList
 
 
-class Brown_Postag:
-    def __init__(self, max_sent_len=15, train_sents=1000, dev_sents=200, test_sents=200, mapping_file="readers/en-brown.map"):
+class BrownPostag(object):
+    def __init__(self, max_sent_len=15, train_sents=1000, dev_sents=200, test_sents=200,
+                 mapping_file="readers/en-brown.map"):
 
-        ##Build mapping of postags:
+        # Build mapping of postags:
         mapping = {}
         if mapping_file is not None:
             for line in open(mapping_file):
@@ -16,29 +16,28 @@ class Brown_Postag:
         x_dict = {}
         int_to_word = []
         y_dict = {}
-        int_to_pos = []
 
-        max_sents = train_sents + dev_sents + test_sents
+        # max_sents = train_sents + dev_sents + test_sents
         sents = brown.tagged_sents()
         train_s = sents[0:train_sents]
         dev_s = sents[train_sents:train_sents + dev_sents]
         test_s = sents[train_sents + dev_sents:train_sents + dev_sents + test_sents]
         word_c = 0
         tag_c = 0
-        ##Initialize noun to be tag zero so that it the default tag
+        # Initialize noun to be tag zero so that it the default tag
         y_dict["noun"] = 0
         int_to_pos = ["noun"]
         tag_c += 1
-        train_s_x = []
-        train_s_y = []
-        dev_s_x = []
-        dev_s_y = []
-        test_s_x = []
-        test_s_y = []
+        # train_s_x = []
+        # train_s_y = []
+        # dev_s_x = []
+        # dev_s_y = []
+        # test_s_x = []
+        # test_s_y = []
         word_counts = {}
-        seq_list_train = Sequence_List(x_dict, int_to_word, y_dict, int_to_pos)
-        seq_list_dev = Sequence_List(x_dict, int_to_word, y_dict, int_to_pos)
-        seq_list_test = Sequence_List(x_dict, int_to_word, y_dict, int_to_pos)
+        seq_list_train = SequenceList(x_dict, int_to_word, y_dict, int_to_pos)
+        seq_list_dev = SequenceList(x_dict, int_to_word, y_dict, int_to_pos)
+        seq_list_test = SequenceList(x_dict, int_to_word, y_dict, int_to_pos)
         for ds, sl in [[train_s, seq_list_train], [dev_s, seq_list_dev], [test_s, seq_list_test]]:
             for s in ds:
                 if len(s) > max_sent_len or len(s) <= 1:
@@ -48,7 +47,7 @@ class Brown_Postag:
                 for word, tag in s:
                     tag = tag.lower()
                     if tag not in mapping:
-                        ##Add unk tags to dict
+                        # Add unk tags to dict
                         mapping[tag] = "noun"
                     c_t = mapping[tag]
                     if word not in x_dict:

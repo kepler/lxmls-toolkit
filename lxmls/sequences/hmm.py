@@ -1,10 +1,15 @@
+from __future__ import division
+
+import numpy as np
+from builtins import range
+
 import lxmls.sequences.confusion_matrix as cm
 import lxmls.sequences.sequence_classifier as sc
-from lxmls.sequences.log_domain import *
+from lxmls.sequences.log_domain import logzero
 
 
 class HMM(sc.SequenceClassifier):
-    """ Implements a first order HMM."""
+    """Implements a first order HMM."""
 
     def __init__(self, observation_labels, state_labels):
         """Initialize an HMM. observation_labels and state_labels are the sets
@@ -59,19 +64,19 @@ class HMM(sc.SequenceClassifier):
                 self.update_counts(sequence, state_posteriors, transition_posteriors)
                 total_log_likelihood += log_likelihood
 
-            print(("Iter: %i Log Likelihood: %f" % (t, total_log_likelihood)))
+            print("Iter: %i Log Likelihood: %f" % (t, total_log_likelihood))
             # M-Step
             self.compute_parameters()
             if evaluate:
-                ### Evaluate accuracy at this iteration
+                # Evaluate accuracy at this iteration
                 acc = self.evaluate_EM(dataset)
-                print(("Iter: %i Accuracy: %f" % (t, acc)))
+                print("Iter: %i Accuracy: %f" % (t, acc))
 
     def evaluate_EM(self, dataset):
-        ### Evaluate accuracy at initial iteration
+        # Evaluate accuracy at initial iteration
         pred = self.viterbi_decode_corpus(dataset)
         confusion_matrix = cm.build_confusion_matrix(dataset.seq_list, pred,
-                                                     self.get_num_states(), self.get_num_states())
+                                                     self.get_num_states())
         best = cm.get_best_assignment(confusion_matrix)
         new_pred = []
         for i, sequence in enumerate(dataset.seq_list):
@@ -135,7 +140,7 @@ class HMM(sc.SequenceClassifier):
         self.emission_counts.fill(smoothing)
 
     def update_counts(self, sequence, state_posteriors, transition_posteriors):
-        """ Used in the E-step in EM."""
+        """Used in the E-step in EM."""
 
         ###########################
         # Solution to Exercise 2.10 
@@ -143,7 +148,7 @@ class HMM(sc.SequenceClassifier):
         num_states = self.get_num_states()  # Number of states.
         length = len(sequence.x)  # Length of the sequence.
 
-        ## Take care of initial probs
+        # Take care of initial probs
         for y in range(num_states):
             self.initial_counts[y] += state_posteriors[0, y]
         for pos in range(length):
@@ -154,7 +159,7 @@ class HMM(sc.SequenceClassifier):
                     for y_prev in range(num_states):
                         self.transition_counts[y, y_prev] += transition_posteriors[pos - 1, y, y_prev]
 
-        ##Final position
+        # Final position
         for y in range(num_states):
             self.final_counts[y] += state_posteriors[length - 1, y]
 
@@ -162,7 +167,7 @@ class HMM(sc.SequenceClassifier):
             ###########################
 
     def compute_parameters(self):
-        """ Estimate the HMM parameters by normalizing the counts."""
+        """Estimate the HMM parameters by normalizing the counts."""
 
         # Normalize the initial counts.
         self.initial_probs = self.initial_counts / np.sum(self.initial_counts)
@@ -196,13 +201,11 @@ class HMM(sc.SequenceClassifier):
 
         return initial_scores, transition_scores, final_scores, emission_scores
 
-    ######
-    # Plot the transition matrix for a given HMM
-    ######
     def print_transition_matrix(self):
+        """Plot the transition matrix for a given HMM."""
         import matplotlib.pyplot as plt
         cax = plt.imshow(self.transition_probs, interpolation='nearest', aspect='auto')
-        cbar = plt.colorbar(cax, ticks=[-1, 0, 1])
+        # cbar = plt.colorbar(cax, ticks=[-1, 0, 1])
         plt.xticks(np.arange(0, self.get_num_states()), self.state_labels.names, rotation=90)
         plt.yticks(np.arange(0, self.get_num_states()), self.state_labels.names)
         plt.show()
@@ -217,14 +220,14 @@ class HMM(sc.SequenceClassifier):
             eval_viterbi_train = self.evaluate_corpus(train, viterbi_pred_train)
             eval_posterior_train = self.evaluate_corpus(train, posterior_pred_train)
             print(("Smoothing %f --  Train Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (
-            i, eval_posterior_train, eval_viterbi_train)))
+                i, eval_posterior_train, eval_viterbi_train)))
 
             viterbi_pred_test = self.viterbi_decode_corpus(test)
             posterior_pred_test = self.posterior_decode_corpus(test)
             eval_viterbi_test = self.evaluate_corpus(test, viterbi_pred_test)
             eval_posterior_test = self.evaluate_corpus(test, posterior_pred_test)
             print(("Smoothing %f -- Test Set Accuracy: Posterior Decode %.3f, Viterbi Decode: %.3f" % (
-            i, eval_posterior_test, eval_viterbi_test)))
+                i, eval_posterior_test, eval_viterbi_test)))
             if eval_posterior_test > max_acc:
                 max_acc = eval_posterior_test
                 max_smooth = i

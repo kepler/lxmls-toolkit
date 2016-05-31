@@ -1,7 +1,8 @@
 import numpy as np
+from builtins import range
 
 
-class DependencyDecoder:
+class DependencyDecoder(object):
     """
     Dependency decoder class
     """
@@ -29,7 +30,7 @@ class DependencyDecoder:
                     d += np.exp(s[h, m])
                     lap[h, m] = -np.exp(s[h, m])
             lap[m, m] = d
-        r = lap[0, 1:]
+        # r = lap[0, 1:]
         minor = lap[1:, 1:]
 
         # logZ = np.linalg.slogdet(minor)[1]
@@ -90,7 +91,7 @@ class DependencyDecoder:
                 complete[s, t, 1] = np.max(complete_vals1)
                 complete_backtrack[s, t, 1] = s + 1 + np.argmax(complete_vals1)
 
-        value = complete[0][N][1]
+        # value = complete[0][N][1]
         heads = -np.ones(N + 1, dtype=int)
         self.backtrack_eisner(incomplete_backtrack, complete_backtrack, 0, N, 1, 1, heads)
 
@@ -210,7 +211,7 @@ class DependencyDecoder:
             print("After init\n")
             for m in range(0, nw + 1):
                 if 0 < curr_nodes[m]:
-                    print(("{0}|{1} ".format(par[m], m)))
+                    print("{0}|{1} ".format(par[m], m))
             print("\n")
 
         # find a cycle
@@ -273,7 +274,7 @@ class DependencyDecoder:
         if self.verbose:
             print("Found Cycle\n")
             for node in cyc_nodes:
-                print(("{0} ".format(node)))
+                print("{0} ".format(node))
             print("\n")
 
         cyc_weight = 0.0
@@ -312,11 +313,11 @@ class DependencyDecoder:
             rep_con = {}
             keys = sorted(reps[int(cyc_nodes[i])].keys())
             if self.verbose:
-                print(("{0}: ".format(cyc_nodes[i])))
+                print("{0}: ".format(cyc_nodes[i]))
             for key in keys:
                 rep_con[key] = 0
                 if self.verbose:
-                    print(("{0} ".format(key)))
+                    print("{0} ".format(key))
             rep_cons.append(rep_con)
             if self.verbose:
                 print("\n")

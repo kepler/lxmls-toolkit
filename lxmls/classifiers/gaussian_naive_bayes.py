@@ -1,7 +1,10 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, division
+
+import numpy as np
+from builtins import range
 
 import lxmls.classifiers.linear_classifier as lc
-from lxmls.distributions.gaussian import *
+from lxmls.distributions.gaussian import estimate_gaussian
 
 
 class GaussianNaiveBayes(lc.LinearClassifier):
@@ -16,19 +19,19 @@ class GaussianNaiveBayes(lc.LinearClassifier):
         nr_x, nr_f = x.shape
         nr_c = np.unique(y).shape[0]
         prior = np.zeros(nr_c)
-        likelihood = np.zeros((nr_f, nr_c))
+        # likelihood = np.zeros((nr_f, nr_c))
         classes = np.unique(y)
         means = np.zeros((nr_c, nr_f))
         variances = np.zeros((nr_c, nr_f))
         for i in range(nr_c):
             idx, _ = np.nonzero(y == classes[i])
-            prior[i] = 1.0 * len(idx) / len(y)
+            prior[i] = len(idx) / len(y)
             for f in range(nr_f):
                 g = estimate_gaussian(x[idx, f])
                 means[i, f] = g.mean
                 variances[i, f] = g.variance
-        ## Take the mean of the covariance for each matric
-        variances = np.mean(variances, 1)
+        # Take the mean of the covariance for each matrix
+        # variances = np.mean(variances, 1)
         params = np.zeros((nr_f + 1, nr_c))
         for i in range(nr_c):
             params[0, i] = -1 / 2 * np.dot(means[i, :], means[i, :]) + np.log(prior[i])

@@ -1,10 +1,11 @@
 import numpy as np
+from builtins import range
 
 from lxmls.sequences import discriminative_sequence_classifier as dsc
 
 
 class CRFOnline(dsc.DiscriminativeSequenceClassifier):
-    """ Implements a first order CRF"""
+    """Implements a first order CRF."""
 
     def __init__(self, observation_labels, state_labels, feature_mapper,
                  regularizer=0.00001,
@@ -30,7 +31,7 @@ class CRFOnline(dsc.DiscriminativeSequenceClassifier):
                 t += 1
             self.params_per_epoch.append(self.parameters.copy())
             objective_value /= num_examples
-            print(("Epoch: %i Objective value: %f" % (epoch, objective_value)))
+            print("Epoch: %i Objective value: %f" % (epoch, objective_value))
         self.trained = True
         if self.averaged:
             new_w = 0

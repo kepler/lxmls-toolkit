@@ -1,4 +1,7 @@
 import numpy as np
+from builtins import range
+from math import log
+
 import lxmls.classifiers.linear_classifier as lc
 from lxmls.util.my_math_utils import l2norm_squared
 
@@ -59,7 +62,7 @@ class MaxEntOnline(lc.LinearClassifier):
             y_pred = self.test(x_orig, w)
             acc = self.evaluate(y, y_pred)
             self.trained = False
-            print(("Epochs: %i Objective: %f" % (epoch_nr, objective)))
-            print(("Epochs: %i Accuracy: %f" % (epoch_nr, acc)))
+            print("Epochs: %i Objective: %f" % (epoch_nr, objective))
+            print("Epochs: %i Accuracy: %f" % (epoch_nr, acc))
         self.trained = True
         return w

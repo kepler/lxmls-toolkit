@@ -1,7 +1,7 @@
-import numpy as np
-import lxmls.readers.pos_corpus as pcc
-from os import path
 import pickle
+from os import path
+
+import lxmls.readers.pos_corpus as pcc
 
 corpus = pcc.PostagCorpus()
 input_data = path.join(

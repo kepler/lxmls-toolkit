@@ -1,14 +1,12 @@
 import codecs
 import gzip
 import os
+from os.path import dirname
 
+import numpy as np  # This is also needed for theano=True
 from pathlib import Path
 
-from os.path import dirname
-import numpy as np  # This is also needed for theano=True
 from lxmls.sequences.label_dictionary import LabelDictionary
-
-
 # Directory where the data files are located.
 # data_dir = dirname(__file__) + "/../../data/"
 
@@ -43,11 +41,7 @@ def compacify(train_seq, test_seq, dev_seq, theano=False):
                 if tag not in new_y_dict:
                     new_y_dict.add(tag)
 
-                    #    import copy
-                    #    train_seq2, test_seq2, dev_seq2 = copy.deepcopy(train_seq), copy.deepcopy(test_seq), copy.deepcopy(dev_seq)
-
     # REDO INDICES
-    # for corpus_seq in [train_seq2, test_seq2, dev_seq2]:
     for corpus_seq in [train_seq, test_seq, dev_seq]:
         for seq in corpus_seq:
             for i in seq.x:
@@ -94,8 +88,7 @@ class PostagCorpus(object):
         # Initialize sequence list.
         self.sequence_list = SequenceList(self.word_dict, self.tag_dict)
 
-    ## Read a text file in conll format and return a sequence list
-    ## 
+    # Read a text file in conll format and return a sequence list
     def read_sequence_list_conll(self, train_file,
                                  mapping_file=("%s/en-ptb.map"
                                                % dirname(__file__)),
@@ -118,11 +111,11 @@ class PostagCorpus(object):
         return seq_list
 
     ############################################
-    ### Reads a conll file into a sequence list.
-    ### 
+    # Reads a conll file into a sequence list.
     ############################################
     def read_conll_instances(self, file, max_sent_len, max_nr_sent, mapping):
-        assert isinstance(file, Path)
+        if not isinstance(file, Path):
+            file = Path(file)
         if file.suffix == 'gz':
             zf = gzip.open(file.open(), 'rb')
             reader = codecs.getreader("utf-8")
@@ -135,19 +128,19 @@ class PostagCorpus(object):
         instances = []
         ex_x = []
         ex_y = []
-        nr_types = len(self.word_dict)
-        nr_pos = len(self.tag_dict)
+        # nr_types = len(self.word_dict)
+        # nr_pos = len(self.tag_dict)
         for line in contents:
             toks = line.split()
             if len(toks) < 2:
-                # print "sent n %i size %i"%(nr_sent,len(ex_x))
+                # print("sent n %i size %i"%(nr_sent,len(ex_x)))
                 if max_sent_len > len(ex_x) > 1:
-                    # print "accept"
+                    # print("accept")
                     nr_sent += 1
                     instances.append([ex_x, ex_y])
                 # else:
                 #     if(len(ex_x) <= 1):
-                #         print "refusing sentence of len 1"
+                #         print("refusing sentence of len 1")
                 if nr_sent >= max_nr_sent:
                     break
                 ex_x = []
@@ -158,7 +151,7 @@ class PostagCorpus(object):
                 pos = pos.lower()
                 if pos not in mapping:
                     mapping[pos] = "noun"
-                    print(("unknown tag %s" % pos))
+                    print("unknown tag %s" % pos)
                 pos = mapping[pos]
                 if word not in self.word_dict:
                     self.word_dict.add(word)
@@ -170,8 +163,8 @@ class PostagCorpus(object):
                 #                ex_y.append(self.tag_dict[pos])
         return instances
 
-    ## Read a text file in brown format and return a sequence list
-    ## 
+    # Read a text file in brown format and return a sequence list
+    #
     # def read_sequence_list_brown(self,mapping_file="readers/en-ptb.map",max_sent_len=100000,max_nr_sent=100000,categories=""):
     #     ##Build mapping of postags:
     #     mapping = {}
@@ -217,7 +210,6 @@ class PostagCorpus(object):
     #         seq_list.add_sequence(ns_x,ns_y)
     #     return seq_list
 
-
     # Dumps a corpus into a file
     def save_corpus(self, directory):
         if not os.path.isdir(directory + "/"):
@@ -236,7 +228,7 @@ class PostagCorpus(object):
         word_count_fn.close()
         self.sequence_list.save(directory + "sequence_list")
 
-    ## Loads a corpus from a file
+    # Loads a corpus from a file
     def load_corpus(self, directory):
         word_fn = codecs.open(directory + "word.dic", "r", "utf-8")
         for line in word_fn:

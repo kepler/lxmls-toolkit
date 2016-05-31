@@ -1,10 +1,10 @@
-from mrjob.job import MRJob
-from mrjob.protocol import PickleProtocol, PickleValueProtocol
-import numpy as np
-import lxmls.readers.pos_corpus as pcc
-from lxmls.sequences.hmm import HMM
 import pickle
-from emstep import load_sequence, predict_sequence, load_parameters
+
+from mrjob.job import MRJob
+from mrjob.protocol import PickleProtocol
+
+from lxmls.big_data_em.emstep import load_sequence, predict_sequence, load_parameters
+from lxmls.sequences.hmm import HMM
 
 
 # A single iteration of the distributed EM algorithm.
@@ -35,8 +35,8 @@ class EMStep(MRJob):
     def mapper(self, key, s):
         seq = load_sequence(s, self.hmm.observation_labels, self.hmm.state_labels)
 
-        log_likelihood, initial_counts, transition_counts, final_counts, \
-        emission_counts = predict_sequence(seq, self.hmm)
+        log_likelihood, initial_counts, transition_counts, final_counts, emission_counts = predict_sequence(seq,
+                                                                                                            self.hmm)
 
         self.log_likelihood += log_likelihood
         self.initial_counts += initial_counts

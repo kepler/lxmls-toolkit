@@ -6,6 +6,7 @@ from six.moves import urllib
 import numpy as np
 import theano
 import theano.tensor as T
+from builtins import range
 
 
 # from ipdb import set_trace
@@ -76,7 +77,7 @@ def extract_embeddings(embedding_path, word_dict):
     return E
 
 
-class NumpyRNN:
+class NumpyRNN(object):
     def __init__(self, W_e, n_hidd, n_tags, seed=None):
         """
         E       numpy.array Word embeddings of size (n_emb, n_words)
@@ -135,11 +136,11 @@ class NumpyRNN:
         e = np.exp(x / alpha)
         return e / np.sum(e)
 
-    def forward(self, x, allOuts=False, outputs=None):
+    def forward(self, x, all_outs=False, outputs=None):
         """
         Forward pass
 
-        allOuts = True  return intermediate activations; needed to comput backpropagation
+        all_outs = True  return intermediate activations; needed to comput backpropagation
         """
         # Get parameters in nice form
         if outputs is None:
@@ -161,7 +162,7 @@ class NumpyRNN:
             ymax = max(y[t])
             logsum = ymax + np.log(sum(np.exp(y[t] - ymax)))
             p[t] = np.exp(y[t] - logsum)
-            p_y[t] = p[t] / np.sum(p[t])  ##  
+            p_y[t] = p[t] / np.sum(p[t])  ##
             #            # Annother way of computing p_y[t]
             #            p_y[t] = self.soft_max(y[t])
 
@@ -170,7 +171,7 @@ class NumpyRNN:
 
         loss /= len(x)  # Normalize to get the mean
 
-        if allOuts:
+        if all_outs:
             return loss, p_y, p, y, h, z1, x
         else:
             return p_y
@@ -188,7 +189,7 @@ class NumpyRNN:
         # Get parameters
         W_e, W_x, W_h, W_y = self.param
 
-        loss, p_y, p, y, h, z1, x = self.forward(x, allOuts=True, outputs=outputs)
+        loss, p_y, p, y, h, z1, x = self.forward(x, all_outs=True, outputs=outputs)
 
         # Initialize gradients with zero entrances
         nabla_W_e = np.zeros(W_e.shape)
@@ -247,7 +248,7 @@ class NumpyRNN:
 #        return params, actvfunc
 
 
-class RNN:
+class RNN(object):
     def __init__(self, W_e, n_hidd, n_tags, seed=None):
         """
         E       numpy.array Word embeddings of size (n_emb, n_words)
@@ -320,7 +321,7 @@ class RNN:
         return _p_y
 
 
-class LSTM:
+class LSTM(object):
     def __init__(self, W_e, n_hidd, n_tags):
 
         # Dimension of the embeddings

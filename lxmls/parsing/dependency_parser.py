@@ -1,4 +1,5 @@
 import numpy as np
+from builtins import range
 
 from lxmls.parsing.dependency_decoder import DependencyDecoder
 from lxmls.parsing.dependency_features import DependencyFeatures
@@ -6,19 +7,20 @@ from lxmls.parsing.dependency_reader import DependencyReader
 from lxmls.parsing.dependency_writer import DependencyWriter
 
 
-class DependencyParser:
+class DependencyParser(object):
     """
     Dependency parser class
     """
 
-    def __init__(self):
+    def __init__(self, base_directory):
         self.trained = False
         self.projective = False
         self.language = ""
         self.weights = []
+
         self.decoder = DependencyDecoder()
-        self.reader = DependencyReader()
-        self.writer = DependencyWriter()
+        self.reader = DependencyReader(parent_directory=base_directory)
+        self.writer = DependencyWriter(parent_directory=base_directory)
         self.features = DependencyFeatures()
 
     def read_data(self, language):
@@ -31,7 +33,7 @@ class DependencyParser:
         self.weights = np.zeros(self.features.n_feats)
         total = np.zeros(self.features.n_feats)
         for epoch in range(n_epochs):
-            print(("Epoch {0}".format(epoch + 1)))
+            print("Epoch {0}".format(epoch + 1))
             n_mistakes = 0
             n_tokens = 0
             n_instances = 0
@@ -68,9 +70,9 @@ class DependencyParser:
         t = 0
         t0 = 1.0 / (sigma * eta0)
         for epoch in range(n_epochs):
-            print(("Epoch {0}".format(epoch + 1)))
-            n_mistakes = 0
-            n_tokens = 0
+            print("Epoch {0}".format(epoch + 1))
+            # n_mistakes = 0
+            # n_tokens = 0
             n_instances = 0
             objective = 0.0
             for instance in self.reader.train_instances:
@@ -133,6 +135,7 @@ class DependencyParser:
                 n_tokens += 1
             n_instances += 1
             arr_heads_pred.append(heads_pred)
-        print("Test accuracy ({0} test instances): {1}".format(n_instances, np.double(n_tokens - n_mistakes) / np.double(n_tokens)))
+        print("Test accuracy ({0} test instances): {1}".format(n_instances,
+                                                               np.double(n_tokens - n_mistakes) / np.double(n_tokens)))
 
         self.writer.save(self.language, arr_heads_pred)

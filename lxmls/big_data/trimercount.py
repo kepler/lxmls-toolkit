@@ -1,7 +1,4 @@
-# Import the necessary libraries:
 from mrjob.job import MRJob
-import re
-import pdb
 
 
 class TrimerCount(MRJob):

@@ -1,4 +1,5 @@
 import numpy as np
+from builtins import range
 
 import lxmls.sequences.discriminative_sequence_classifier as dsc
 

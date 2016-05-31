@@ -1,9 +1,10 @@
 import numpy as np
+from builtins import range
 
 from lxmls.sequences.log_domain import logzero, logsum
 
 
-class SequenceClassificationDecoder:
+class SequenceClassificationDecoder(object):
     """Implements a sequence classification decoder."""
 
     def __init__(self):

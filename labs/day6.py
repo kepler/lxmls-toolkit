@@ -53,7 +53,7 @@ x0 = train_seq[sample].x  # first sample input (vector of integers)
 y0 = train_seq[sample].y  # first sample output (vector of integers)
 
 rnn = rnns.NumpyRNN(E, n_hidd, n_tags, seed=seed)
-loos, p_y, p, y_rnn, h, z1, x = rnn.forward(x0, allOuts=True, outputs=y0)
+loos, p_y, p, y_rnn, h, z1, x = rnn.forward(x0, all_outs=True, outputs=y0)
 nabla_params = rnn.grads(x0, y0)
 
 # Save loss and gradient to compare with theano output 
@@ -120,7 +120,7 @@ updates = [(_par, _par - lrate * T.grad(_F, _par)) for _par in rnn.param]
 err_sum = theano.function([_x, _y], _err)
 batch_update = theano.function([_x, _y], _F, updates=updates)
 
-## ADDED by MLA: Comparison with NumpyRNN
+# ADDED by MLA: Comparison with NumpyRNN
 grads_func = theano.function([_x, _y], [T.grad(_F, _par) for _par in rnn.param])
 F_func = theano.function([_x, _y], _F)
 F = F_func(x0, y0)

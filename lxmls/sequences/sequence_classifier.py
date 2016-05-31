@@ -1,4 +1,8 @@
+from __future__ import division
+
 import numpy as np
+from builtins import range
+
 import lxmls.sequences.sequence_classification_decoder as scd
 
 
@@ -16,19 +20,19 @@ class SequenceClassifier(object):
         self.trained = False
 
     def get_num_states(self):
-        """ Return the number of states."""
+        """Return the number of states."""
         return len(self.state_labels)
 
     def get_num_observations(self):
-        """ Return the number of observations (e.g. word types)."""
+        """Return the number of observations (e.g. word types)."""
         return len(self.observation_labels)
 
     def train_supervised(self, sequence_list):
-        """ Train a classifier in a supervised setting."""
+        """Train a classifier in a supervised setting."""
         raise NotImplementedError
 
     def compute_scores(self, sequence):
-        """ Compute emission and transition scores for the decoder."""
+        """Compute emission and transition scores for the decoder."""
         raise NotImplementedError
 
     @staticmethod

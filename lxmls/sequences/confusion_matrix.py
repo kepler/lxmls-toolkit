@@ -1,4 +1,6 @@
 import numpy as np
+from builtins import range
+
 from lxmls.util.my_math_utils import dict_max, sort_dic_by_value
 
 # Colour for each pos tag
@@ -17,7 +19,7 @@ tag_colors = {
     'VERB': 'Red'}
 
 
-def build_confusion_matrix(truth_seq, prediction_seq, nr_true_pos, nr_states):
+def build_confusion_matrix(truth_seq, prediction_seq, nr_true_pos):
     matrix = {}
     for i in range(nr_true_pos):
         matrix[i] = {}
@@ -47,35 +49,33 @@ def get_best_assignment(conf_matrix):
     return best_tags
 
 
-#####################
-### Splits the confusion matrix per best tags:
-### What clusters have best tag nouns, verbs etc
-#####################
 def split_matrix_by_best_tag(conf_mat, best_tags):
+    """
+    Splits the confusion matrix per best tags:
+    What clusters have best tag nouns, verbs etc
+    """
     matrix_per_tag = {}
-    for cluster, best_tag in list(best_tags.items()):
+    for cluster, best_tag in best_tags.items():
         if best_tag not in matrix_per_tag:
             matrix_per_tag[best_tag] = {}
         matrix_per_tag[best_tag][cluster] = conf_mat[cluster]
     return matrix_per_tag
 
 
-#####################################
-#### Get's the average purity per tag
-#####################################
 def get_average_purity_per_tag(conf_mat, best_tags):
+    """
+    Get's the average purity per tag
+    """
     matrix_per_tag = split_matrix_by_best_tag(conf_mat, best_tags)
     purity_per_tag = {}
-    for tag, matrix in list(matrix_per_tag.items()):
+    for tag, matrix in matrix_per_tag.items():
         values = list(get_clusters_purity(matrix_per_tag[tag]).values())
         purity_per_tag[tag] = sum(values) / len(values)
     return sort_dic_by_value(purity_per_tag, reverse=True)
 
 
-#############################
-### Returns the purity of each cluster
-#############################
 def get_clusters_purity(conf_matrix):
+    """Returns the purity of each cluster."""
     purity = {}
     for i, (cluster, cluster_dist) in enumerate(conf_matrix.items()):
         value, tag = dict_max(cluster_dist)
@@ -84,25 +84,22 @@ def get_clusters_purity(conf_matrix):
     return purity
 
 
-#####
-### Returns a list of clusters sorted by their purity
-#####
 def sort_conf_matrix_by_purity(conf_matrix):
+    """Returns a list of clusters sorted by their purity."""
     return sort_dic_by_value(get_clusters_purity(conf_matrix), reverse=True)
 
 
-def plot_confusion_bar_graph(matrix, pos_list, clusters, title):
+def plot_confusion_bar_graph(matrix, pos_list, clusters):
     import matplotlib.pyplot as plt
-    ## Get the mapping
+    # Get the mapping
     mapping = get_best_assignment(matrix)
-    ## Figure details
+    # Figure details
     fig_aux = plt.figure()
     fig = fig_aux.add_subplot(1, 1, 1)
     xlocations = np.array(list(range(len(clusters))))
     rects = {}
     i = 0
 
-    # print matrix
     for cluster in clusters:
         # Tags for each cluster
         cluster_tags = matrix[cluster]
@@ -114,7 +111,8 @@ def plot_confusion_bar_graph(matrix, pos_list, clusters, title):
                 rects[tag] = {}
             tag_name = pos_list.get_label_name(tag)
             tag_name = tag_name.upper()
-            aux = fig.bar(xlocations[i], value, bottom=bottom, linewidth=0, color=tag_colors[tag_name], edgecolor=tag_colors[tag_name])
+            aux = fig.bar(xlocations[i], value, bottom=bottom, linewidth=0, color=tag_colors[tag_name],
+                          edgecolor=tag_colors[tag_name])
             rects[tag][0] = aux
             bottom += value
         i += 1
@@ -124,7 +122,7 @@ def plot_confusion_bar_graph(matrix, pos_list, clusters, title):
         tag = mapping[i]
         tag_name = pos_list.get_label_name(tag)
         best_tags_names.append(tag_name)
-    # print best_tags_names
+    # print(best_tags_names)
     fig.set_xticklabels(best_tags_names)
     pos_list2 = sorted(iter(list(pos_list.items())), key=lambda x: x[1])
     color_list = [x[0] for x in pos_list2]

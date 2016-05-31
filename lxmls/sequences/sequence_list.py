@@ -66,7 +66,6 @@ class SequenceList(object):
 
     def load(self, file):
         seq_fn = open(file, "r")
-        seq_list = []
         for line in seq_fn:
             seq_x = []
             seq_y = []

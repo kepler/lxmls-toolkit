@@ -1,16 +1,14 @@
-import sys
-from lxmls.sequences.label_dictionary import *
-from lxmls.sequences.sequence import *
-from lxmls.sequences.sequence_list import *
+from lxmls.sequences.label_dictionary import LabelDictionary
+from lxmls.sequences.sequence_list import SequenceList
 
 
-################
-# Implements a simple sequence example taken from wikipedia
-# States are Sunny and Rainy
-# Observations are: Shop, Clean, Walk
-#################
+class SimpleSequence(object):
+    """
+    Implements a simple sequence example taken from wikipedia
+    States are Sunny and Rainy
+    Observations are: Shop, Clean, Walk
+    """
 
-class SimpleSequence:
     def __init__(self):
         # Observation set.
         self.x_dict = LabelDictionary(['walk', 'shop', 'clean', 'tennis'])

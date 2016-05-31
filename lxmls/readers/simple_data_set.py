@@ -3,8 +3,11 @@ import numpy as np
 
 # This class generates a 2D dataset with two classes, "positive" and "negative".
 # Each class follows a Gaussian distribution.
-class SimpleDataSet:
-    """ A simple two dimensional dataset for visualization purposes. The date set contains points from two gaussians with mean u_i and std_i"""
+class SimpleDataSet(object):
+    """
+    A simple two dimensional dataset for visualization purposes.
+    The date set contains points from two gaussians with mean u_i and std_i
+    """
 
     def __init__(self, nr_examples=100, g1=None, g2=None, balance=0.5, split=None):
         if g1 is None:
@@ -36,7 +39,8 @@ class SimpleDataSet:
         self.split = split
         self.X = X[perm, :]
         self.y = y[perm]
-        train_y, dev_y, test_y, train_X, dev_X, test_X = split_train_dev_test(self.X, self.y, split[0], split[1], split[2])
+        train_y, dev_y, test_y, train_X, dev_X, test_X = split_train_dev_test(self.X, self.y, split[0], split[1],
+                                                                              split[2])
         self.train_X = train_X
         self.train_y = train_y
         self.dev_X = dev_X
@@ -45,10 +49,14 @@ class SimpleDataSet:
         self.test_y = test_y
 
     def get_name(self):
-        return "Simple Data Set -- Mean1= (%.2f,%.2f) Var1 = %.2f Mean2= (%.2f,%.2f) Var2= %.2f \nNr. Points=%.2f, Balance=%.2f Train-Dev-Test (%.2f,.%.2f,%.2f)" % (
-            self.mean1[0], self.mean1[1], self.variance1, self.mean2[0], self.mean2[1], self.variance2, self.nr_points, self.balance, self.split[0],
-            self.split[1],
-            self.split[2])
+        name = "Simple Data Set -- Mean1= (%.2f,%.2f) Var1 = %.2f Mean2= (%.2f,%.2f) Var2= %.2f \n" \
+               "Nr. Points=%.2f, Balance=%.2f Train-Dev-Test (%.2f,.%.2f,%.2f)" % (
+                   self.mean1[0], self.mean1[1], self.variance1, self.mean2[0], self.mean2[1], self.variance2,
+                   self.nr_points,
+                   self.balance, self.split[0],
+                   self.split[1],
+                   self.split[2])
+        return name
 
     def get_bayes_optimal(self):
         params = np.zeros((3, 2))
@@ -63,7 +71,7 @@ class SimpleDataSet:
         print(params)
         return params
 
-    def plot_data(self, params=np.array([]), name="Naive Bayes", print_bayes_opt=True):
+    def plot_data(self, name="Naive Bayes", print_bayes_opt=True):
         import matplotlib.pyplot as plt
         fig = plt.figure()
         fig.suptitle(self.get_name())
@@ -78,13 +86,13 @@ class SimpleDataSet:
             axis.scatter(self.test_X[idx3, 0], self.test_X[idx3, 1], s=30, c="red", marker='o')
         if idx4.shape[0] > 0:
             axis.scatter(self.test_X[idx4, 0], self.test_X[idx4, 1], s=30, c="blue", marker='o')
-        ## Plot Bayes optimal
+        # Plot Bayes optimal
         if print_bayes_opt:
             bayes_opt_params = self.get_bayes_optimal()
             self.add_line(fig, axis, bayes_opt_params, "Bayes Optimal", "black")
 
         axis.legend()
-        #        fig.show()
+        #  fig.show()
         return fig, axis
 
     def add_line(self, fig, axis, params, name, colour):
@@ -94,7 +102,7 @@ class SimpleDataSet:
         y_star = ((params[1, 1] - params[1, 0]) * x + (params[0, 1] - params[0, 0])) / (params[2, 0] - params[2, 1])
         axis.plot(x, y_star, 'g--', c=colour, label=name, linewidth=2)
         axis.legend()
-        #        fig.show()
+        # fig.show()
         return fig, axis
 
 

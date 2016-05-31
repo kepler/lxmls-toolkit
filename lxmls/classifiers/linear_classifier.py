@@ -1,4 +1,7 @@
+from __future__ import division
+
 import numpy as np
+from builtins import range
 
 
 class LinearClassifier(object):
@@ -7,14 +10,14 @@ class LinearClassifier(object):
 
     def train(self, x, y):
         """
-        Returns the weight vector
+        Returns the weight vector.
         """
         raise NotImplementedError('LinearClassifier.train not implemented')
 
     @staticmethod
     def get_scores(x, w):
         """
-        Computes the dot product between X,w
+        Computes the dot product between X and w.
         """
         return np.dot(x, w)
 
@@ -37,7 +40,9 @@ class LinearClassifier(object):
 
     @staticmethod
     def add_intercept_term(x):
-        """ Adds a column of ones to estimate the intercept term for separation boundary"""
+        """
+        Adds a column of ones to estimate the intercept term for separation boundary.
+        """
         nr_x, nr_f = x.shape
         intercept = np.ones([nr_x, 1])
         x = np.hstack((intercept, x))
@@ -51,4 +56,4 @@ class LinearClassifier(object):
             if truth[i] == predicted[i]:
                 correct += 1
             total += 1
-        return 1.0 * correct / total
+        return correct / total

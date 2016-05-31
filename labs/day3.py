@@ -1,8 +1,8 @@
-import lxmls.sequences.crf_online as crfo
-import lxmls.sequences.structured_perceptron as spc
 import lxmls.readers.pos_corpus as pcc
-import lxmls.sequences.id_feature as idfc
+import lxmls.sequences.crf_online as crfo
 import lxmls.sequences.extended_feature as exfc
+import lxmls.sequences.id_feature as idfc
+import lxmls.sequences.structured_perceptron as spc
 
 print("CRF Exercise")
 
@@ -62,7 +62,8 @@ eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print("Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
+print(
+"Structured Perceptron - ID Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
 
 feature_mapper = exfc.ExtendedFeatures(train_seq)
 feature_mapper.build_features()
@@ -79,4 +80,5 @@ eval_train = sp.evaluate_corpus(train_seq, pred_train)
 eval_dev = sp.evaluate_corpus(dev_seq, pred_dev)
 eval_test = sp.evaluate_corpus(test_seq, pred_test)
 
-print("Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (eval_train, eval_dev, eval_test))
+print("Structured Perceptron - Extended Features Accuracy Train: %.3f Dev: %.3f Test: %.3f" % (
+eval_train, eval_dev, eval_test))

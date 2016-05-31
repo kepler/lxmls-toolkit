@@ -1,9 +1,9 @@
+import numpy as np
+import pickle
 from mrjob.job import MRJob
 from mrjob.protocol import PickleProtocol, PickleValueProtocol
-import numpy as np
-import lxmls.readers.pos_corpus as pcc
+
 from lxmls.sequences.hmm import HMM
-import pickle
 
 
 def load_sequence(s, word_dict, tag_dict):
@@ -79,11 +79,11 @@ def predict_sequence(sequence, hmm):
     transition_counts = np.zeros((num_states, num_states))
     final_counts = np.zeros(num_states)
 
-    ## Take care of initial position counts.
+    # Take care of initial position counts.
     for y in range(num_states):
         initial_counts[y] += state_posteriors[0, y]
 
-    ## Take care of emission and transition counts.
+    # Take care of emission and transition counts.
     for pos in range(length):
         x = sequence.x[pos]
         for y in range(num_states):
@@ -92,7 +92,7 @@ def predict_sequence(sequence, hmm):
                 for y_prev in range(num_states):
                     transition_counts[y, y_prev] += transition_posteriors[pos - 1, y, y_prev]
 
-    ## Take care of final position counts.
+    # Take care of final position counts.
     for y in range(num_states):
         final_counts[y] += state_posteriors[length - 1, y]
 
@@ -187,6 +187,9 @@ class EMStep(MRJob):
         if path.exists(filename):
             self.hmm = pickle.loads(open(filename).read().decode('string-escape'))
         else:
+            # Load the word and tag dictionaries.
+            word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
+
             # Initialize the HMM parameters randomly.
             self.hmm = HMM(word_dict, tag_dict)
             self.hmm.initialize_random()
@@ -200,8 +203,8 @@ class EMStep(MRJob):
     def mapper(self, key, s):
         seq = load_sequence(s, self.hmm.observation_labels, self.hmm.state_labels)
 
-        log_likelihood, initial_counts, transition_counts, final_counts, \
-        emission_counts = predict_sequence(seq, self.hmm)
+        log_likelihood, initial_counts, transition_counts, final_counts, emission_counts = predict_sequence(seq,
+                                                                                                            self.hmm)
 
         self.log_likelihood += log_likelihood
         self.initial_counts += initial_counts
@@ -221,9 +224,6 @@ class EMStep(MRJob):
         self.hmm.compute_parameters()
         yield 'hmm', self.hmm
 
-
-# Load the word and tag dictionaries.
-word_dict, tag_dict = pickle.load(open('word_tag_dict.pkl'))
 
 if __name__ == '__main__':
     em_step = EMStep()

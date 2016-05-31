@@ -1,10 +1,12 @@
 import numpy as np
+from builtins import range
 from scipy import optimize
+
 import lxmls.sequences.discriminative_sequence_classifier as dsc
 
 
 class CRFBatch(dsc.DiscriminativeSequenceClassifier):
-    """ Implements a first order CRF"""
+    """Implements a first order CRF."""
 
     def __init__(self, observation_labels, state_labels, feature_mapper,
                  regularizer=0.00001):
@@ -34,7 +36,7 @@ class CRFBatch(dsc.DiscriminativeSequenceClassifier):
         likelihoods = 0.0
         exp_counts = np.zeros(parameters.shape)
         for sequence in dataset.seq_list:
-            seq_obj, seq_lik = self.get_objective_seq(parameters, sequence, exp_counts)
+            seq_obj, seq_lik = self.get_objective_seq(sequence, exp_counts)
             objective += seq_obj
             likelihoods += seq_lik
         objective /= len(dataset.seq_list)
@@ -45,7 +47,7 @@ class CRFBatch(dsc.DiscriminativeSequenceClassifier):
         gradient -= self.regularizer * parameters
         gradient -= exp_counts
 
-        ##Since we are minizing we need to multiply both the objective and gradient by -1
+        # Since we are minizing we need to multiply both the objective and gradient by -1
         objective *= -1
         gradient *= -1
 
@@ -56,7 +58,7 @@ class CRFBatch(dsc.DiscriminativeSequenceClassifier):
         print(objective)
         return objective, gradient
 
-    def get_objective_seq(self, parameters, sequence, exp_counts):
+    def get_objective_seq(self, sequence, exp_counts):
         # Compute scores given the observation sequence.
         initial_scores, transition_scores, final_scores, emission_scores = \
             self.compute_scores(sequence)
@@ -119,7 +121,8 @@ class CRFBatch(dsc.DiscriminativeSequenceClassifier):
 
                 if pos > 0:
                     prev_y_t_true = sequence.y[pos - 1]
-                    true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true, prev_y_t_true)
+                    true_transition_features = self.feature_mapper.get_transition_features(sequence, pos - 1, y_t_true,
+                                                                                           prev_y_t_true)
                     for feat_id in true_transition_features:
                         emp_counts[feat_id] += 1
 

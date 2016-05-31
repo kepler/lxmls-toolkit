@@ -1,4 +1,6 @@
 import numpy as np
+from builtins import range
+
 import lxmls.classifiers.linear_classifier as lc
 
 
@@ -28,7 +30,7 @@ class Perceptron(lc.LinearClassifier):
             seed += 1
 
             for nr in range(nr_x):
-                # print "iter %i" %( epoch_nr*nr_x + nr)
+                # print("iter %i" % (epoch_nr*nr_x + nr))
                 inst = perm[nr]
                 y_hat = self.get_label(x[inst:inst + 1, :], w)
 
@@ -44,7 +46,7 @@ class Perceptron(lc.LinearClassifier):
             y_pred = self.test(x_orig, w)
             acc = self.evaluate(y, y_pred)
             self.trained = False
-            print(("Rounds: %i Accuracy: %f" % (epoch_nr, acc)))
+            print("Rounds: %i Accuracy: %f" % (epoch_nr, acc))
         self.trained = True
 
         if self.averaged:

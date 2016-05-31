@@ -1,7 +1,8 @@
 import numpy as np
+from builtins import range
 
 
-class Multinomial:
+class Multinomial(object):
     def __init__(self, params):
         self.params = params
 

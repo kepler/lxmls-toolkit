@@ -1,4 +1,5 @@
 import numpy as np
+from builtins import range
 
 import lxmls.sequences.sequence_classifier as sc
 
@@ -12,15 +13,15 @@ class DiscriminativeSequenceClassifier(sc.SequenceClassifier):
         self.parameters = np.zeros(self.feature_mapper.get_num_features())
 
     ################################
-    ##  Build the node and edge potentials
-    ## node - f(t,y_t,X)*w
-    ## edge - f(t,y_t,y_(t-1),X)*w
-    ## Only supports binary features representation
-    ## If we have an HMM with 4 positions and transitins
-    ## a - b - c - d
-    ## the edge potentials have at position:
-    ## 0 a - b
-    ## 1 b - c
+    #  Build the node and edge potentials
+    # node - f(t,y_t,X)*w
+    # edge - f(t,y_t,y_(t-1),X)*w
+    # Only supports binary features representation
+    # If we have an HMM with 4 positions and transitins
+    # a - b - c - d
+    # the edge potentials have at position:
+    # 0 a - b
+    # 1 b - c
     ################################
     def compute_scores(self, sequence):
         num_states = self.get_num_states()
@@ -49,7 +50,8 @@ class DiscriminativeSequenceClassifier(sc.SequenceClassifier):
             if pos > 0:
                 for tag_id in range(num_states):
                     for prev_tag_id in range(num_states):
-                        transition_features = self.feature_mapper.get_transition_features(sequence, pos, tag_id, prev_tag_id)
+                        transition_features = self.feature_mapper.get_transition_features(sequence, pos, tag_id,
+                                                                                          prev_tag_id)
                         score = 0.0
                         for feat_id in transition_features:
                             score += self.parameters[feat_id]
@@ -64,6 +66,9 @@ class DiscriminativeSequenceClassifier(sc.SequenceClassifier):
             final_scores[prev_tag_id] = score
 
         return initial_scores, transition_scores, final_scores, emission_scores
+
+    def train_supervised(self, sequence_list):
+        return super(DiscriminativeSequenceClassifier, self).train_supervised(sequence_list)
 
     def save_model(self, directory):
         with open(directory + "parameters.txt", 'w') as fn:

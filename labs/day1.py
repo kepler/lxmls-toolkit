@@ -128,7 +128,7 @@ print("")
 # Exercise 3.2: implement Naive Bayes for multinomial data
 
 # Read the book review data
-scr = srs.SentimentCorpus("books")
+scr = srs.SentimentCorpus("books", base_directory="../data/sentiment")
 
 # Initialize the Naive Bayes classifier for multinomial data
 mnb = mnb.MultinomialNaiveBayes()

@@ -1,11 +1,12 @@
+from __future__ import division
 import math
 
 
-def load_counts(ifile):
+def load_counts(input_file):
     counts = {}
     total_kmers = 0.0
-    with open(ifile) as iinput:
-        for line in iinput:
+    with open(input_file) as f:
+        for line in f:
             word, count = line.strip().split('\t')
             word = word[1:-1]
             count = int(count)
@@ -18,8 +19,7 @@ def score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentenc
     val = 0.
     for i in range(len(test_sentence) - 3):
         tri = test_sentence[i:i + 3]
-        tri_pt = counts_pt.get(tri,
-                               1.0)  # this will attempt to get counts from the dictionary; if it fails, it will return 1.0
+        tri_pt = counts_pt.get(tri, 1.0)  # attempt to get counts from the dictionary; if it fails, return 1.0
         log_prob_tri_pt = math.log10(tri_pt / total_trimers_pt)
         tri_en = counts_en.get(tri, 1.0)
         log_prob_tri_en = math.log10(tri_en / total_trimers_en)
@@ -43,5 +43,6 @@ if __name__ == '__main__':
 
     while True:
         test_sentence = eval(input("Type a test sentence and press ENTER:\n"))
-        if not test_sentence: break
-    score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentence)
+        if not test_sentence:
+            break
+        score(counts_pt, total_trimers_pt, counts_en, total_trimers_en, test_sentence)

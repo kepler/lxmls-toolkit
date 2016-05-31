@@ -45,7 +45,7 @@ print("######################")
 # TODO: Find another corpus (SemEval?) and cleaner parameter extraction
 import lxmls.readers.sentiment_reader as srs
 
-scr = srs.SentimentCorpus("books")
+scr = srs.SentimentCorpus("books", base_directory="../data/sentiment")
 train_x = scr.train_X.T
 train_y = scr.train_y[:, 0]
 test_x = scr.test_X.T

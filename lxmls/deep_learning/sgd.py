@@ -1,5 +1,5 @@
-import sys
 import numpy as np
+import sys
 import time
 
 
@@ -78,8 +78,7 @@ def SGDTrain(model, n_iter, bsize=None, lrate=None, train_set=None,
                 for m in np.arange(len(model.params)):
                     if shared_vars:
                         # Parameters as theano shared variables
-                        model.params[m].set_value(model.params[m].get_value()
-                                                  - lrate * np.array(nabla_params[m]))
+                        model.params[m].set_value(model.params[m].get_value() - lrate * np.array(nabla_params[m]))
                     else:
                         # Parameters as numpy array
                         model.params[m] -= lrate * nabla_params[m]
@@ -98,13 +97,14 @@ def SGDTrain(model, n_iter, bsize=None, lrate=None, train_set=None,
             else:
                 delta_p_devel = 0
             prev_p_devel = p_devel
-        if prev_p_train:
-            delta_p_train = p_train - prev_p_train
-        else:
-            delta_p_train = 0
+        # if prev_p_train:
+        #     delta_p_train = p_train - prev_p_train
+        # else:
+        #     delta_p_train = 0
         prev_p_train = p_train
-        validation_time = time.clock() - init_time - batch_time
+        # validation_time = time.clock() - init_time - batch_time
         sys.stdout.write("  Epoch %2d/%2d in %2.2f seg\n" % (i + 1, n_iter, batch_time))
         if devel_set:
-            sys.stdout.write("Logpos devel: %10.1f (delta: %10.2f) Corr devel %2.2f\n\n" % (p_devel, delta_p_devel, corr))
+            sys.stdout.write(
+                "Logpos devel: %10.1f (delta: %10.2f) Corr devel %2.2f\n\n" % (p_devel, delta_p_devel, corr))
     print("")
