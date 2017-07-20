@@ -30,6 +30,7 @@ setup(
     name='LxMLS Toolkit',
     version=VERSION,
     author='LxMLS team',
+    author_email='lxmls-2017@lx.it.pt',
     description='Machine Learning and Natural Language toolkit',
     long_description=read('README.md'),
     license='MIT',
